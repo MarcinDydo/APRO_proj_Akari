@@ -15,7 +15,7 @@ public class GUI extends JFrame {
     int[][] neighbour =new int[8][8]; //cyfry
     int[][] black =new int[8][8]; //sciany
     int[][] map =new int[8][8]; //gdzie sa lampki
-    int[][] lit =new int[8][8]; //czy zapalone
+    boolean[][] lit =new boolean[8][8]; //czy zapalone
     public GUI() {
         this.setTitle("Test");
         this.setSize(680,680);
@@ -30,6 +30,7 @@ public class GUI extends JFrame {
                 } else {
                     black[i][j] = 0;
                 }
+                lit[0][0]=false;
             }
         }
         for(int i=0; i<8;i++) {
@@ -60,6 +61,9 @@ public class GUI extends JFrame {
             for(int i=0; i<8;i++) {
                 for(int j=0;j<8;j++) {
                     g.setColor(Color.GRAY);
+                    if(lit[i][j]==true) {
+                        g.setColor(Color.YELLOW);
+                    }
                     if(black[i][j]==1){
                         g.setColor(Color.BLACK);
                     }
@@ -93,14 +97,23 @@ public class GUI extends JFrame {
         public void mouseMoved(MouseEvent e) {
             my = e.getY();
             mx= e.getX();
-            System.out.println("x: "+mx);
-            System.out.println("y: "+my);
         }
     }
     public class Click implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
-
+            if(inBoxX()!=-1&& inBoxY()!=-1){
+                System.out.println("X "+inBoxX());
+                System.out.println("Y "+inBoxY());
+            }
+            else {
+                System.out.println("Out of the box");
+            }
+            if(lit[inBoxX()][inBoxY()]==false){
+                lit[inBoxX()][inBoxY()]=true;
+            } else{
+                lit[inBoxX()][inBoxY()]=false;
+            }
         }
 
         @Override
@@ -124,4 +137,27 @@ public class GUI extends JFrame {
         }
     }
 
-}
+    public int inBoxX() {
+        for(int i=0; i<8;i++) {
+            for (int j = 0; j < 8; j++) {
+                if(mx>=2*spacing+i*80 && mx< spacing+i*80+80 && my>= spacing+j*80+26 && my <j*80+ 80+26){
+                    return i;
+                }
+
+            }
+        }
+        return -1;
+            }
+    public int inBoxY() {
+        for(int i=0; i<8;i++) {
+            for (int j = 0; j < 8; j++) {
+                if(mx>=2*spacing+i*80 && mx< spacing+i*80+80 && my>= spacing+j*80+26 && my <j*80+ 80+26){
+                    return j;
+                }
+
+            }
+        }
+        return -1;
+    }
+
+    }
