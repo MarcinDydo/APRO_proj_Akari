@@ -13,7 +13,7 @@ public class Akari extends JFrame {
 
     public static void main(String args[]){
         Akari a= new Akari(10,10);
-        a.buttons[5][2].setValue(6);
+        a.buttons[5][2].setValue(3);
         a.buttons[5][7].setValue(6);
     }
 
@@ -22,7 +22,7 @@ public class Akari extends JFrame {
         this.sx=x;
         this.sy=y;
         buttons=new AkariButton[x][y];
-        setSize(40*x,40*y);
+        setSize(45*x,45*y);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         p.setLayout(new GridLayout(x,y));
@@ -59,6 +59,7 @@ public class Akari extends JFrame {
                     break;
                 case 6:
                     this.setIcon(Black);
+                    this.removeMouseListener(this);
                     break;
                 case 7:
                     this.setIcon(Lit);
@@ -66,13 +67,19 @@ public class Akari extends JFrame {
                 case 8:
                     this.setIcon(Bulb);
                     break;
+                case 9:
+                    this.setIcon(DarkCross);
+                    break;
+                case 10:
+                    this.setIcon(LitCross);
+                    break;
             }
         }
 
-        ImageIcon Dark,Lit,Black,Bulb,Black_0,Black_1,Black_2,Black_3,Black_4;
+        ImageIcon StateDark,StateLit,Dark,DarkCross,Lit,LitCross,Black,Bulb,Black_0,Black_1,Black_2,Black_3,Black_4;
+        int cross;
         int value=0;
         int x,y;
-        int cross=0;
         /*
         0-Dark
         1- Black_1
@@ -83,13 +90,18 @@ public class Akari extends JFrame {
         6- Black
         7- Lit
         8- Bulb
+        9-Dark_Cross
+        10-Dark_Lit
          */
-        boolean lit=false;
         public AkariButton(int x,int y){
             this.x=x;
             this.y=y;
+            StateDark=new ImageIcon(this.getClass().getResource("dark.png"));
+            StateLit=new ImageIcon(this.getClass().getResource("lit.png"));
             Dark=new ImageIcon(this.getClass().getResource("dark.png"));
             Lit=new ImageIcon(this.getClass().getResource("lit.png"));
+            DarkCross=new ImageIcon(this.getClass().getResource("dark_cross.png"));
+            LitCross=new ImageIcon(this.getClass().getResource("lit_cross.png"));
             Bulb=new ImageIcon(this.getClass().getResource("bulb.png"));
             Black=new ImageIcon(this.getClass().getResource("black.png"));
             Black_0=new ImageIcon(this.getClass().getResource("black_0.png"));
@@ -97,25 +109,32 @@ public class Akari extends JFrame {
             Black_2=new ImageIcon(this.getClass().getResource("black_2.png"));
             Black_3=new ImageIcon(this.getClass().getResource("black_3.png"));
             Black_4=new ImageIcon(this.getClass().getResource("black_4.png"));
+
             this.addMouseListener(this);
             setIcon(Dark);
         }
-        public void mouseClicked(MouseEvent e){
-           System.out.println(this.x);
-            System.out.println( this.y);
-            switch(value) {
-                case 0:
-                case 7:
-                    setValue(8);
-                    expand(this,7);
-                    break;
-                case 8:
-                    setValue(0);
-                    expand(this,0);
-                    reloadLight();
-                    break;
-                    }
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isRightMouseButton(e)) {
+                cross(this);
+            } else {
+                System.out.println(this.x);
+                System.out.println(this.y);
+                switch (value) {
+                    case 0:
+                    case 7:
+                        if(cross==0) {
+                            setValue(8);
+                            expand(this, 7);
+                        }
+                        break;
+                    case 8:
+                            setValue(0);
+                            expand(this, 0);
+                            reloadLight();
+                        break;
+                }
             }
+        }
 
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
@@ -146,15 +165,14 @@ public class Akari extends JFrame {
        public boolean Litable(AkariButton a){
             if(a.value==0) return true;
             else return false;
-       }
-       public void expandDown(AkariButton a,int state){
+       }       public void expandDown(AkariButton a,int state){
             int x = a.x;
             int y = a.y;
-           if (x + 1 < sx && (buttons[x+1][y].value==0 || buttons[x+1][y].value==7)) {
-               buttons[x+1][y].setValue(state);
-               expandDown(buttons[x+1][y],state);
-           }
-       }
+            if (x + 1 < sx && (buttons[x+1][y].value==0 || buttons[x+1][y].value==7)) {
+                buttons[x+1][y].setValue(state);
+                expandDown(buttons[x+1][y],state);
+            }
+        }
         public void expandUp(AkariButton a,int state){
             int x = a.x;
             int y = a.y;
@@ -189,7 +207,17 @@ public class Akari extends JFrame {
             }
         }
 
-
-
+        public void cross(AkariButton a){
+        if(cross==0){
+            a.Dark=DarkCross;
+            a.Lit=LitCross;
+            a.setValue(a.value);
+            cross=1;
+        } else if(cross==1){
+            a.Dark=StateDark;
+            a.Lit=StateLit;
+            a.setValue(a.value);
+            cross=0;
+        }
     }
-}
+}}
