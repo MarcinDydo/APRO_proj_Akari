@@ -41,6 +41,7 @@ public class Akari extends JFrame {
      * Method to check if solution is right.
      * @return true if solution is right, false when solution is wrong.
      */
+    //Tu narazie piszcie jak chcecie metode do sprawdzania, na moje trzeba na pewno sprawdzic przy tych z cyframi czy jest tyle ile powinno bycc zarowek i druga sprawa to bedzie kolizja zarowek
             public boolean check(){
                 for(int i=0;i<sx;i++){
                     for(int j=0;j<sx;j++){
