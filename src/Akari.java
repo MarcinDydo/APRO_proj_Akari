@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import Generator.Generator;
 /**
  * Class to represent Akari game
 */
@@ -20,6 +21,7 @@ public class Akari extends JFrame {
         super("Akari");
         this.sx=x;
         this.sy=y;
+        Generator g = new Generator(sx);
         buttons=new AkariButton[x][y];
         setSize(45*x,45*y);
         setResizable(false);
@@ -27,7 +29,7 @@ public class Akari extends JFrame {
         p.setLayout(new GridLayout(x,y));
         for(int i=0;i<x;i++){
             for(int j=0;j<y;j++){
-                buttons[i][j]=new AkariButton(this, i,j);
+                buttons[i][j]=new AkariButton(this, i,j,State.getState(g.getMAP()[i][j]) );
                 p.add(buttons[i][j]);
             }
         }

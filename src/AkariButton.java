@@ -78,7 +78,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param x X coordinate of this tile in akari game.
      * @param y Y coordinate of this tile in akari game.
      */
-    public AkariButton(Akari akari, int x, int y){
+    public AkariButton(Akari akari, int x, int y,State state){
         this.akari = akari;
         this.x=x;
         this.y=y;
@@ -95,10 +95,8 @@ public class AkariButton extends JButton implements MouseListener {
         Black_2=new ImageIcon(this.getClass().getResource("black_2.png"));
         Black_3=new ImageIcon(this.getClass().getResource("black_3.png"));
         Black_4=new ImageIcon(this.getClass().getResource("black_4.png"));
-
         this.addMouseListener(this);
-        setIcon(Dark);
-        this.state=State.Dark;
+        this.setState(state);
     }
 
 @Override
