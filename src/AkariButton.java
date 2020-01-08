@@ -1,11 +1,17 @@
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+/**
+ * Class to represent One Akari Tile.
+ */
 public class AkariButton extends JButton implements MouseListener {
     public State state;
     private Akari akari;
 
+    /**
+     * Sets the state of this tile.
+     * @param state tile to be set.
+     */
     public void setState(State state) {
         this.state = state;
         switch(state) {
@@ -40,9 +46,17 @@ public class AkariButton extends JButton implements MouseListener {
         }
     }
 
+    /**
+     * Icons that can represent tile state.
+     */
     ImageIcon StateDark,StateLit,Dark,DarkCross,Lit,LitCross,Black,Bulb,Black_0,Black_1,Black_2,Black_3,Black_4;
+    /**
+    Indicator of cross marking.
+     */
     int cross;
-    int bulb_conflict;
+    /**
+     * Position of the tile in the akari game.
+     */
     int x,y;
     /*
     0-Dark
@@ -56,6 +70,13 @@ public class AkariButton extends JButton implements MouseListener {
     8- Bulb
     9-Dark_Cross
     10-Dark_Lit
+     */
+
+    /**
+     * Constructor for tile.
+     * @param akari Akari game that this tile belongs to.
+     * @param x X coordinate of this tile in akari game.
+     * @param y Y coordinate of this tile in akari game.
      */
     public AkariButton(Akari akari, int x, int y){
         this.akari = akari;
@@ -79,6 +100,8 @@ public class AkariButton extends JButton implements MouseListener {
         setIcon(Dark);
         this.state=State.Dark;
     }
+
+@Override
     public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
             cross(this);
@@ -122,26 +145,36 @@ public class AkariButton extends JButton implements MouseListener {
 
     }
 
+    /**
+     * Recursive method to light up or darken tiles.
+     * @param a Button to start with.
+     * @param state State to set.
+     */
     public void expand(AkariButton a, State state){
         expandDown(a,state);
         expandUp(a,state);
         expandRight(a,state);
         expandLeft(a,state);
     }
-   public boolean Litable(AkariButton a){
-        if(a.state== State.Dark) return true;
-        else return false;
-   }       public void expandDown(AkariButton a, State state){
+
+    /**
+     * Recursive method to light up or darken tiles in the south direction.
+     * @param a Button to start with.
+     * @param state State to set.
+     */
+    public void expandDown(AkariButton a, State state){
         int x = a.x;
         int y = a.y;
         if (x + 1 < akari.sx && (akari.buttons[x+1][y].state==State.Dark || akari.buttons[x+1][y].state==State.Lit)) {
-            if(akari.buttons[x+1][y].state==State.Bulb){
-                akari.buttons[x+1][y].bulb_conflict=1;
-            }
             akari.buttons[x+1][y].setState(state);
             expandDown(akari.buttons[x+1][y],state);
         }
     }
+    /**
+     * Recursive method to light up or darken tiles in the north direction.
+     * @param a Button to start with.
+     * @param state State to set.
+     */
     public void expandUp(AkariButton a, State state){
         int x = a.x;
         int y = a.y;
@@ -150,6 +183,11 @@ public class AkariButton extends JButton implements MouseListener {
             expandUp(akari.buttons[x-1][y],state);
         }
     }
+    /**
+     * Recursive method to light up or darken tiles in the right direction.
+     * @param a Button to start with.
+     * @param state State to set.
+     */
     public void expandRight(AkariButton a, State state){
         int x = a.x;
         int y = a.y;
@@ -158,6 +196,11 @@ public class AkariButton extends JButton implements MouseListener {
             expandRight(akari.buttons[x][y+1],state);
         }
     }
+    /**
+     * Recursive method to light up or darken tiles in the left direction.
+     * @param a Button to start with.
+     * @param state State to set.
+     */
     public void expandLeft(AkariButton a, State state){
         int x = a.x;
         int y = a.y;
@@ -166,6 +209,10 @@ public class AkariButton extends JButton implements MouseListener {
             expandLeft(akari.buttons[x][y-1],state);
         }
     }
+
+    /**
+     * Method to reload all the Lights.
+     */
     public void reloadLight(){
         for(int i = 0; i< akari.sx; i++){
             for(int j = 0; j< akari.sy; j++){
@@ -176,6 +223,10 @@ public class AkariButton extends JButton implements MouseListener {
         }
     }
 
+    /**
+     * Method used to put cross on tile.
+     * @param a Tile to put cross on.
+     */
     public void cross(AkariButton a){
     if(cross==0){
         a.Dark=DarkCross;

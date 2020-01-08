@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
+/**
+ * Class to represent Akari game
+*/
 public class Akari extends JFrame {
     int sx;
     int sy;
@@ -9,7 +11,11 @@ public class Akari extends JFrame {
     Panel p=new Panel();
     AkariButton[][] buttons;
 
-
+    /**
+     * Constructor for akari game.
+     * @param x Akari height.
+     * @param y Akari width
+     */
     public Akari(int x,int y){
         super("Akari");
         this.sx=x;
@@ -31,6 +37,10 @@ public class Akari extends JFrame {
 
     }
 
+    /**
+     * Method to check if solution is right.
+     * @return true if solution is right, false when solution is wrong.
+     */
             public boolean check(){
                 for(int i=0;i<sx;i++){
                     for(int j=0;j<sx;j++){
@@ -41,6 +51,10 @@ public class Akari extends JFrame {
                 }
                 return true;
             }
+
+    /**
+     * Class to represent MenuBar of the akari game.
+     */
     public class AkariMenuBar extends JMenuBar {
         JMenu file=new JMenu("File");
         JMenuItem Check=new JMenuItem(new AbstractAction("Check") {
