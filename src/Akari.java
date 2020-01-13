@@ -37,6 +37,13 @@ class Akari extends JFrame {
         setVisible(true);
 
     }
+
+    /**
+     * Constructor for loaded maps.
+     * @param x Akari height.
+     * @param y Akari width.
+     * @param map Map of buttons.
+     */
     Akari(int x, int y,int[][]map) {
         super("Akari");
         this.sx=x;
@@ -57,6 +64,10 @@ class Akari extends JFrame {
         setVisible(true);
 
     }
+
+    /**
+     * Method for deleting akari window and contents.
+     */
     void wipe(){
         for(int i=0;i<sx;i++){
             for(int j=0;j<sy;j++){

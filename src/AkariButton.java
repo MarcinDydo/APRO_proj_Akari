@@ -5,7 +5,13 @@ import java.awt.event.MouseListener;
  * Class to represent One Akari Tile.
  */
 public class AkariButton extends JButton implements MouseListener {
+    /**
+     * State of the tile
+     */
     State state;
+    /**
+     * Akari this Button is a part of.
+     */
     private Akari akari;
 
     /**
@@ -170,6 +176,9 @@ public class AkariButton extends JButton implements MouseListener {
         }
     }
 
+    /**
+     * Method to change cross state and texture for the tile.
+     */
     private void cross() {
         if(cross){
             if(this.state == State.LitCross) {
