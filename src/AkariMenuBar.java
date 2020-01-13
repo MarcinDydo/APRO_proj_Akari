@@ -17,7 +17,9 @@ class AkariMenuBar extends JMenuBar {
             }
         });
         JMenu file = new JMenu("File");
+        JMenu difficulty = new JMenu("Change Difficulty");
         this.add(file);
+        this.add(difficulty);
         JMenuItem check = new JMenuItem(new AbstractAction("Check") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -57,6 +59,41 @@ class AkariMenuBar extends JMenuBar {
                 System.out.println("click3");
             }
         });
+        JMenuItem veryEasy = new JMenuItem(new AbstractAction("Very Easy") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("click3");
+            }
+        });
+        JMenuItem Easy = new JMenuItem(new AbstractAction("Easy") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("click3");
+            }
+        });
+        JMenuItem Medium = new JMenuItem(new AbstractAction("Medium") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("click3");
+            }
+        });
+        JMenuItem Hard = new JMenuItem(new AbstractAction("Hard") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("click3");
+            }
+        });
+        JMenuItem veryHard = new JMenuItem(new AbstractAction("Very Hard") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("click3");
+            }
+        });
+        difficulty.add(veryEasy);
+        difficulty.add(Easy);
+        difficulty.add(Medium);
+        difficulty.add(Hard);
+        difficulty.add(veryHard);
         file.add(Import);
         file.add(generate);
     }
