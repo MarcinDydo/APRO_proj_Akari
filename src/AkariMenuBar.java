@@ -9,6 +9,13 @@ import java.io.IOException;
 class AkariMenuBar extends JMenuBar {
 
     AkariMenuBar(Akari akari) throws HeadlessException {
+        JMenuItem generate  = new JMenuItem(new AbstractAction("Generate new level") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Generator generator = new Generator(akari.sx,akari.sy);
+                akari.swap(generator.getMAP(4));
+            }
+        });
         JMenu file = new JMenu("File");
         this.add(file);
         JMenuItem check = new JMenuItem(new AbstractAction("Check") {
@@ -24,11 +31,11 @@ class AkariMenuBar extends JMenuBar {
         JMenuItem load = new JMenuItem(new AbstractAction("Load from CSV") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String loadPath = JOptionPane.showInputDialog(Akari.p, "Where to load the file from?", "Specify the path...");
+                String loadPath = JOptionPane.showInputDialog(akari, "Where to load the file from?", "Specify the path...");
                 try {
                     new Load("maps/"+loadPath+".csv",akari);
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(Akari.p,
+                    JOptionPane.showMessageDialog(akari,
                             "Incorrect path");
                 }
             }
@@ -51,6 +58,7 @@ class AkariMenuBar extends JMenuBar {
             }
         });
         file.add(Import);
+        file.add(generate);
     }
 
 

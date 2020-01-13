@@ -5,7 +5,7 @@ public class Game extends Akari {
         super(size,size);
     }
     public static void main(String[] args){
-        Game a= new Game(5);
+        Game a= new Game(10);
 
     }
 }

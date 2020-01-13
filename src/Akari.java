@@ -38,44 +38,28 @@ class Akari extends JFrame {
 
     }
 
+
     /**
-     * Constructor for loaded maps.
-     * @param x Akari height.
-     * @param y Akari width.
-     * @param map Map of buttons.
+     * Method for swaping akari tiles.
      */
-    Akari(int x, int y,int[][]map) {
-        super("Akari");
-        this.sx=x;
-        this.sy=y;
-        buttons=new AkariButton[x][y];
-        setSize(45*x,45*y);
-        setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        p.setLayout(new GridLayout(x,y));
-        for(int i=0;i<x;i++){
-            for(int j=0;j<y;j++){
+    void swap(int[][] map){
+        remove(p);
+        sx=map.length;
+        sy=map[0].length;
+        setVisible(false);
+        p = new Panel();
+        setSize(45*map.length,45*map[0].length);
+        p.setLayout(new GridLayout(map.length,map[0].length));
+        p.setPreferredSize(new Dimension(45*map.length,45*map[0].length));
+        buttons= new AkariButton[map.length][map[0].length];
+        for(int i=0;i<map.length;i++){
+            for(int j=0;j<map[0].length;j++){
                 buttons[i][j] = new AkariButton(this, i,j, State.toState(map[i][j]));
                 p.add(buttons[i][j]);
             }
         }
+        repaint();
         add(p);
-        this.setJMenuBar(new AkariMenuBar(this));
         setVisible(true);
-
-    }
-
-    /**
-     * Method for deleting akari window and contents.
-     */
-    void wipe(){
-        for(int i=0;i<sx;i++){
-            for(int j=0;j<sy;j++){
-                p.remove(buttons[i][j]);
-                buttons[0][0] = null;
-            }
-        }
-        setVisible(false);
-        dispose();
     }
 }

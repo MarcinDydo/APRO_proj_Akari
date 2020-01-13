@@ -18,9 +18,8 @@ class Load {
      * @throws IOException No file found or file obstructed.
      */
     Load(String filename,Akari a) throws IOException{
-        a.wipe();
         read(filename);
-        new Akari(x,y,map);
+        a.swap(map);
     }
 
     /**
