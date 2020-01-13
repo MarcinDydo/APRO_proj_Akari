@@ -7,6 +7,4 @@ public class Game extends Akari {
     public static void main(String args[]){
         Game a= new Game(10);
     }
-
-
 }

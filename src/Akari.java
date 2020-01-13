@@ -1,16 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import Generator.Generator;
 /**
  * Class to represent Akari game
 */
 public class Akari extends JFrame {
     int sx;
     int sy;
-    Panel p1=new Panel();
-    Panel p=new Panel();
     AkariButton[][] buttons;
+    Panel p = new Panel();
 
     /**
      * Constructor for akari game.
@@ -21,15 +19,16 @@ public class Akari extends JFrame {
         super("Akari");
         this.sx=x;
         this.sy=y;
-        Generator g = new Generator(sx);
         buttons=new AkariButton[x][y];
+        Generator generator = new Generator(x,y);
+        int[][] map = generator.getMAP(4);
         setSize(45*x,45*y);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         p.setLayout(new GridLayout(x,y));
         for(int i=0;i<x;i++){
             for(int j=0;j<y;j++){
-                buttons[i][j]=new AkariButton(this, i,j,State.getState(g.getMAP()[i][j]) );
+                buttons[i][j] = new AkariButton(this, i,j, State.toState(map[i][j]));
                 p.add(buttons[i][j]);
             }
         }
@@ -38,23 +37,14 @@ public class Akari extends JFrame {
         setVisible(true);
 
     }
-
-    /**
-     * Method to check if solution is right.
-     * @return true if solution is right, false when solution is wrong.
-     */
-    //Tu narazie piszcie jak chcecie metode do sprawdzania, na moje trzeba na pewno sprawdzic przy tych z cyframi czy jest tyle ile powinno bycc zarowek i druga sprawa to bedzie kolizja zarowek
-            public boolean check(){
-                for(int i=0;i<sx;i++){
-                    for(int j=0;j<sx;j++){
-                        if(buttons[i][j].state==State.Dark){
-                            return false;
-                        }
-                    }
-                }
-                return true;
+    private boolean checkMap(){
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons.length; j++) {
+                if (buttons[i][j].state.getValue() < 1) return false;
             }
-
+        }
+        return true;
+    }
     /**
      * Class to represent MenuBar of the akari game.
      */
@@ -63,7 +53,8 @@ public class Akari extends JFrame {
         JMenuItem Check=new JMenuItem(new AbstractAction("Check") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println(check());
+                if(checkMap()) System.out.println("Congratulations!"); //for further expansion
+                else System.out.println("Game not finished");
             }
         });
         JMenuItem Load=new JMenuItem(new AbstractAction("Load from CSV") {
