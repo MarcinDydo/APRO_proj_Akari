@@ -22,7 +22,7 @@ class Akari extends JFrame {
         buttons=new AkariButton[x][y];
         Generator generator = new Generator(x,y);
         int[][] map = generator.getMAP(4);
-        setSize(45*x,45*y);
+        setSize(40*x,40*y+40);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         p.setLayout(new GridLayout(x,y));
@@ -48,7 +48,7 @@ class Akari extends JFrame {
         sy=map[0].length;
         setVisible(false);
         p = new Panel();
-        setSize(45*map.length,45*map[0].length);
+        setSize(40*map.length,40*map[0].length+40);
         p.setLayout(new GridLayout(map.length,map[0].length));
         p.setPreferredSize(new Dimension(45*map.length,45*map[0].length));
         buttons= new AkariButton[map.length][map[0].length];
