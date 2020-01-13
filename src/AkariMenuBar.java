@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 /**
  * Class to represent MenuBar of the akari game.
@@ -24,6 +25,12 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String loadPath = JOptionPane.showInputDialog(Akari.p, "Where to load the file from?", "Specify the path...");
+                try {
+                    new Load(loadPath,akari);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(Akari.p,
+                            "Incorrect path");
+                }
             }
         });
         file.add(load);

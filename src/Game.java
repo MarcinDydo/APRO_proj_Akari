@@ -1,10 +1,11 @@
 
 public class Game extends Akari {
 
-    public Game(int size) {
+    private Game(int size) {
         super(size,size);
     }
-    public static void main(String args[]){
-        Game a= new Game(10);
+    public static void main(String[] args){
+        Game a= new Game(5);
+
     }
 }
