@@ -5,22 +5,9 @@ import java.awt.event.MouseListener;
  * Class to represent One Akari Tile.
  */
 public class AkariButton extends JButton implements MouseListener {
-    /**
-     * State of the tile
-     */
     State state;
-    /**
-     * Akari this Button is a part of.
-     */
     private Akari akari;
-
-    /**
-    Indicator of cross marking.
-     */
     private boolean cross;
-    /**
-     * Position of the tile in the akari game.
-     */
     int x,y;
 
     /**
@@ -28,6 +15,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param akari Akari game that this tile belongs to.
      * @param x X coordinate of this tile in akari game.
      * @param y Y coordinate of this tile in akari game.
+     * @param state indicator of state and icon of the tile
      */
     AkariButton(Akari akari, int x, int y, State state) {
         this.akari = akari;
@@ -35,10 +23,11 @@ public class AkariButton extends JButton implements MouseListener {
         this.y=y;
         this.addMouseListener(this);
         this.state=state;
-        setIcon(state.icon); //sets texture for button
+        setIcon(state.icon); //sets default texture for button (from csv)
     }
     /**
      * Sets the state of this tile.
+     * and updates its icon
      * @param state tile to be set.
      */
     private void setState(State state) {
