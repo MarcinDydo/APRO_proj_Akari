@@ -1,3 +1,6 @@
+/**
+ * Checker class for akari
+ */
 class Checker {
     private Akari akari;
 
