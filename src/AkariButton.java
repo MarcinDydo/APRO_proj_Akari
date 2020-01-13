@@ -5,13 +5,13 @@ import java.awt.event.MouseListener;
  * Class to represent One Akari Tile.
  */
 public class AkariButton extends JButton implements MouseListener {
-    public State state;
+    State state;
     private Akari akari;
 
     /**
     Indicator of cross marking.
      */
-    boolean cross;
+    private boolean cross;
     /**
      * Position of the tile in the akari game.
      */
@@ -23,7 +23,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param x X coordinate of this tile in akari game.
      * @param y Y coordinate of this tile in akari game.
      */
-    public AkariButton(Akari akari, int x, int y, State state){
+    AkariButton(Akari akari, int x, int y, State state) {
         this.akari = akari;
         this.x=x;
         this.y=y;
@@ -35,7 +35,7 @@ public class AkariButton extends JButton implements MouseListener {
      * Sets the state of this tile.
      * @param state tile to be set.
      */
-    public void setState(State state) {
+    private void setState(State state) {
         if(cross){
             if (state == State.Lit) this.state = State.LitCross;
             if (state == State.Dark) this.state = State.DarkCross;
@@ -52,7 +52,7 @@ public class AkariButton extends JButton implements MouseListener {
             System.out.println(this.x);
             System.out.println(this.y);
             switch (state) {
-                default:
+                case Dark:
                 case Lit:
                     if(!cross) {
                         setState(State.Bulb);
@@ -93,7 +93,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param a Button to start with.
      * @param state State to set.
      */
-    public void expand(AkariButton a, State state){
+    private void expand(AkariButton a, State state) {
         expandDown(a,state);
         expandUp(a,state);
         expandRight(a,state);
@@ -105,7 +105,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param a Button to start with.
      * @param state State to set.
      */
-    public void expandDown(AkariButton a, State state){
+    private void expandDown(AkariButton a, State state) {
         int x = a.x;
         int y = a.y;
         if (x + 1 < akari.sx && (akari.buttons[x+1][y].state==State.Dark || akari.buttons[x+1][y].state==State.Lit
@@ -119,7 +119,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param a Button to start with.
      * @param state State to set.
      */
-    public void expandUp(AkariButton a, State state){
+    private void expandUp(AkariButton a, State state) {
         int x = a.x;
         int y = a.y;
         if (x -1 > -1 && (akari.buttons[x-1][y].state==State.Dark || akari.buttons[x-1][y].state==State.Lit
@@ -133,7 +133,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param a Button to start with.
      * @param state State to set.
      */
-    public void expandRight(AkariButton a, State state){
+    private void expandRight(AkariButton a, State state) {
         int x = a.x;
         int y = a.y;
         if (y+1 < akari.sy && (akari.buttons[x][y+1].state==State.Dark || akari.buttons[x][y+1].state==State.Lit
@@ -147,7 +147,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param a Button to start with.
      * @param state State to set.
      */
-    public void expandLeft(AkariButton a, State state){
+    private void expandLeft(AkariButton a, State state) {
         int x = a.x;
         int y = a.y;
         if (y-1 > -1 && (akari.buttons[x][y-1].state==State.Dark || akari.buttons[x][y-1].state==State.Lit
@@ -160,7 +160,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Method to reload all the Lights.
      */
-    public void reloadLight(){
+    private void reloadLight() {
         for(int i = 0; i< akari.sx; i++){
             for(int j = 0; j< akari.sy; j++){
                 if(akari.buttons[i][j].state==State.Bulb){
@@ -170,7 +170,7 @@ public class AkariButton extends JButton implements MouseListener {
         }
     }
 
-    public void cross(){
+    private void cross() {
         if(cross){
             if(this.state == State.LitCross) {
                 cross=false;
