@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class to represent Akari game
+ * Class to represent Akari game.
 */
 class Akari extends JFrame {
     int sx;
@@ -13,7 +13,7 @@ class Akari extends JFrame {
     /**
      * Constructor for akari game.
      * @param x Akari height.
-     * @param y Akari width
+     * @param y Akari width.
      */
     Akari(int x, int y) {
         super("Akari");

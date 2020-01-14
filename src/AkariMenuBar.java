@@ -7,7 +7,12 @@ import java.io.IOException;
  * Class to represent MenuBar of the akari game.
  */
 class AkariMenuBar extends JMenuBar {
-
+    /**
+     * Constructor for Menu bar.
+     *
+     * @param akari Akari this menu bar will be attached to.
+     * @throws HeadlessException Thrown when code that is dependent on a mouse is called in an environment that does not a mouse.
+     */
     AkariMenuBar(Akari akari) throws HeadlessException {
         JMenuItem generate  = new JMenuItem(new AbstractAction("Generate new level") {
             @Override
