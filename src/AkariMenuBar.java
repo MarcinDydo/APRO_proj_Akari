@@ -23,8 +23,28 @@ class AkariMenuBar extends JMenuBar {
         JMenuItem check = new JMenuItem(new AbstractAction("Check") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if (new Checker(akari).check()) JOptionPane.showMessageDialog(Akari.p,
-                        "You win!");
+                if (new Checker(akari).check()) {
+                    Object[] options = {"New Game",
+                            "Save Game",
+                            "Return to game"};
+                    int n = JOptionPane.showOptionDialog(akari,
+                            "You won! What would you like to do next?",
+                            "Game Won",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[2]);
+                    System.out.println(n);
+                    if(n==1){
+                        String savePath = JOptionPane.showInputDialog(Akari.p, "Where to save the file?", "Specify the path...");
+                        Saver csvFile = new Saver(akari);
+                        csvFile.saveToCSV(savePath);
+                    } else if(n==0){
+                        Generator generator = new Generator(akari.sx,akari.sy);
+                        akari.swap(generator.getMAP(4));
+                    }
+                }
                 else JOptionPane.showMessageDialog(Akari.p,
                         "Solution is incorrect");
             }
@@ -58,35 +78,45 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 System.out.println("click3");
             }
-        });
+
+    });
         JMenuItem veryEasy = new JMenuItem(new AbstractAction("Very Easy") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("click3");
+                Generator generator = new Generator(6,6);
+                akari.swap(generator.getMAP(4));
             }
         });
         JMenuItem Easy = new JMenuItem(new AbstractAction("Easy") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("click3");
+
+                Generator generator = new Generator(8,8);
+                akari.swap(generator.getMAP(4));
             }
         });
         JMenuItem Medium = new JMenuItem(new AbstractAction("Medium") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("click3");
+
+                Generator generator = new Generator(10,10);
+                akari.swap(generator.getMAP(4));
             }
         });
         JMenuItem Hard = new JMenuItem(new AbstractAction("Hard") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("click3");
+
+                Generator generator = new Generator(12,12);
+                akari.swap(generator.getMAP(4));
             }
         });
         JMenuItem veryHard = new JMenuItem(new AbstractAction("Very Hard") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("click3");
+
+                Generator generator = new Generator(15,15);
+                akari.swap(generator.getMAP(4));
             }
         });
         difficulty.add(veryEasy);
