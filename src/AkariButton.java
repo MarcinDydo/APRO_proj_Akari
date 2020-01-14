@@ -53,7 +53,28 @@ public class AkariButton extends JButton implements MouseListener {
                         setState(State.Bulb);
                         expand(this, State.Lit );
                         reloadLight();
-                        if (new Checker(akari).check()) JOptionPane.showMessageDialog(Akari.p, "You win!");
+                        if (new Checker(akari).check()) {
+                            Object[] options = {"New Game",
+                                    "Save Game",
+                                    "Return to game"};
+                            int n = JOptionPane.showOptionDialog(akari,
+                                    "You won! What would you like to do next?",
+                                    "Game Won",
+                                    JOptionPane.YES_NO_CANCEL_OPTION,
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,
+                                    options,
+                                    options[2]);
+                            System.out.println(n);
+                            if (n == 1) {
+                                String savePath = JOptionPane.showInputDialog(Akari.p, "Where to save the file?", "Specify the path...");
+                                Saver csvFile = new Saver(akari);
+                                csvFile.saveToCSV(savePath);
+                            } else if (n == 0) {
+                                Generator generator = new Generator(akari.sx, akari.sy);
+                                akari.swap(generator.getMAP(4));
+                            }
+                        }
                     }
                     break;
                 case Bulb:
