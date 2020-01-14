@@ -52,9 +52,12 @@ public class AkariButton extends JButton implements MouseListener {
                     if(!cross) {
                         setState(State.Bulb);
                         expand(this, State.Lit );
+                        reloadLight();
+                        if (new Checker(akari).check()) JOptionPane.showMessageDialog(Akari.p, "You win!");
                     }
                     break;
                 case Bulb:
+                case Error:
                     setState(State.Dark);
                     expand(this, State.Dark);
                     reloadLight();
@@ -89,10 +92,10 @@ public class AkariButton extends JButton implements MouseListener {
      * @param state State to set.
      */
     private void expand(AkariButton a, State state) {
-        expandDown(a,state);
-        expandUp(a,state);
         expandRight(a,state);
         expandLeft(a,state);
+        expandDown(a,state);
+        expandUp(a,state);
     }
 
     /**
@@ -107,6 +110,8 @@ public class AkariButton extends JButton implements MouseListener {
                 || akari.buttons[x+1][y].state==State.LitCross || akari.buttons[x+1][y].state==State.DarkCross)) {
             akari.buttons[x+1][y].setState(state);
             expandDown(akari.buttons[x+1][y],state);
+        } else if((x + 1 < akari.sx) && (akari.buttons[x+1][y].state==State.Bulb)){
+            akari.buttons[x+1][y].setState(State.Error);
         }
     }
     /**
@@ -121,6 +126,8 @@ public class AkariButton extends JButton implements MouseListener {
                 || akari.buttons[x-1][y].state==State.LitCross || akari.buttons[x-1][y].state==State.DarkCross)) {
             akari.buttons[x-1][y].setState(state);
             expandUp(akari.buttons[x-1][y],state);
+        } else if((x -1 > -1) && (akari.buttons[x-1][y].state==State.Bulb)){
+            akari.buttons[x-1][y].setState(State.Error);
         }
     }
     /**
@@ -135,6 +142,8 @@ public class AkariButton extends JButton implements MouseListener {
                 || akari.buttons[x][y+1].state==State.LitCross || akari.buttons[x][y+1].state==State.DarkCross)) {
             akari.buttons[x][y+1].setState(state);
             expandRight(akari.buttons[x][y+1],state);
+        } else if((y + 1 < akari.sy) && (akari.buttons[x][y+1].state==State.Bulb)){
+            akari.buttons[x][y+1].setState(State.Error);
         }
     }
     /**
@@ -149,6 +158,8 @@ public class AkariButton extends JButton implements MouseListener {
                 || akari.buttons[x][y-1].state==State.LitCross || akari.buttons[x][y-1].state==State.DarkCross)) {
             akari.buttons[x][y-1].setState(state);
             expandLeft(akari.buttons[x][y-1],state);
+        } else if((y-1 > -1) && (akari.buttons[x][y-1].state==State.Bulb)){
+            akari.buttons[x][y-1].setState(State.Error);
         }
     }
 
@@ -158,7 +169,14 @@ public class AkariButton extends JButton implements MouseListener {
     private void reloadLight() {
         for(int i = 0; i< akari.sx; i++){
             for(int j = 0; j< akari.sy; j++){
-                if(akari.buttons[i][j].state==State.Bulb){
+                if(akari.buttons[i][j].state==State.Bulb||akari.buttons[i][j].state==State.Error){
+                    akari.buttons[i][j].setState(State.Bulb);
+                }
+            }
+        }
+        for(int i = 0; i< akari.sx; i++){
+            for(int j = 0; j< akari.sy; j++){
+                if(akari.buttons[i][j].state==State.Bulb||akari.buttons[i][j].state==State.Error){
                     expand(akari.buttons[i][j], State.Lit);
                 }
             }
