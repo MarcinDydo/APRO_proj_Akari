@@ -43,10 +43,10 @@ class Akari extends JFrame {
      * Method for swaping akari tiles.
      */
     void swap(int[][] map){
+        setVisible(false);
         remove(p);
         sx=map.length;
         sy=map[0].length;
-        setVisible(false);
         p = new Panel();
         setSize(40*map.length,40*map[0].length+40);
         p.setLayout(new GridLayout(map.length,map[0].length));
