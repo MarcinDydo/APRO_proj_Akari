@@ -25,21 +25,57 @@ public class Generator {
      */
     private void makeMap(int ratio) {
         for (int i = 0; i < MAP.length; i++) {
-            for (int j = 0; j < MAP.length; j++) {
+            for (int j = 0; j < MAP[0].length; j++) {
                 MAP[i][j] = assignRandom(ratio); //ratio blacks:whites - 1:n
             }
         }
-        //solver method to check and finish the map
+        do{
+            solveCheck();//solver method to check and finish the map
+        }while(!chceckForBlank());
     }
-
     /**
      * assigns random values depending on ratios
-     *
      * @return
      */
     private int assignRandom(int ratio) {
         Random rand = new Random();
         if (rand.nextInt(ratio) > 0) return 0;
         else return 6;
+    }
+
+    private boolean chceckForBlank(){
+        for (int[] i:MAP
+        ) {
+            for (int j:i
+            ) {
+                if (j==0)return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * solver made only for generator
+     */
+    private void solveCheck(){
+        Random rand = new Random();
+        int x = rand.nextInt(MAP.length);
+        int y = rand.nextInt(MAP[0].length);
+        if(MAP[x][y] == 0){
+                    MAP[x][y]=8;
+                    Expansion.expand(MAP,7 ,x,y);
+        }
+    }
+
+    public static void main(String[] args) {
+        Generator gen = new Generator(10,10);
+        gen.makeMap(3);
+        for (int[] i:gen.MAP
+             ) {
+            for (int j:i
+                 ) {
+                System.out.print(j + ",");
+            }
+            System.out.println();
+        }
     }
 }
