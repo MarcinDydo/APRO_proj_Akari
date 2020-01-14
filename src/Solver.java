@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Stack;
 
 public class Solver {
     private Akari akari;
@@ -9,33 +10,44 @@ public class Solver {
 
     public static void main(String[] args) throws IOException {
         Solver s = new Solver();
-        s.read("dadura_test.csv");
+        s.read("przyklad.csv");
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
         System.out.println(s.write());
     }
-    /*
-    Przepisanie buttonów na tablice int-ów na której opiera się solver
 
+//    Solver(Akari akari){
+//        this.akari = akari;
+//        this.map = new int[akari.sx][akari.sy];
+//        for(int i=0;i<akari.sx;i++){
+//            for(int j=0;j<akari.sy;j++){
+//                if(akari.buttons[i][j].state.getValue()<9 && akari.buttons[i][j].state.getValue()>-1) map[i][j]=akari.buttons[i][j].state.getValue();
+//            }
+//        }
+//    }
 
-        Solver(Akari akari){
-            this.akari = akari;
-            this.map = new int[akari.sx][akari.sy];
-            for(int i=0;i<akari.sx;i++){
-                for(int j=0;j<akari.sy;j++){
-                    if(akari.buttons[i][j].state.getValue()<9 && akari.buttons[i][j].state.getValue()>-1) map[i][j]=akari.buttons[i][j].state.getValue();
-                }
-            }
-        }
-
-     */
     public void solve(){
         adding_LIT_next_to_0();
         placingBulbsNextTo4();
         searching_3_on_the_walls();
         searching_2_in_corners();
-        placingBulbsNextTo3();
+        searching_field_with_equals_numer_ofFreeSpace();
+//        searching_field_with_equals_numer_ofFreeSpace();
+    }
+
+    public boolean if_conflict(int i, int k){
+        boolean is_confict = false;
+        //map[i][k]
+//        for(int a = 0; a < ... ; a++){
+//            for (int b = 0; b < ...; b++){
+//
+//            }
+//        }
+
+
+
+        return is_confict;
     }
 
     /**
@@ -47,15 +59,17 @@ public class Solver {
              * sprawdza najpierw lewą ścianę
              */
             if(map[i][0]==3){
-                map[i][0]=8;
-                Expansion.expand(map,7,i,0);
+                if(i+1<x) Expansion.expand(map,7,i+1,0);
+                if(i-1>0) Expansion.expand(map,7,i-1,0);
+                Expansion.expand(map,7,i,1);
             }
             /**
              * sprawdza prawą ścianę
              */
             if(map[i][y-1]==3){
-                map[i][y-1]=8;
-                Expansion.expand(map,7,i,y-1);
+                if(i-1 > 0)Expansion.expand(map,7,i-1,y-1);
+                if(i+1 < x) Expansion.expand(map,7,i+1,y-1);
+                Expansion.expand(map,7,i,y-2);
             }
         }
 
@@ -64,23 +78,67 @@ public class Solver {
              * sprawdzanie górna ściana
              */
             if(map[0][i]==3){
-                map[0][i]=8;
-                Expansion.expand(map,7,0,i);
+                if(i-1 > 0) Expansion.expand(map,7,0,i-1);
+                if(i+1 < y) Expansion.expand(map,7,0,i+1);
+                Expansion.expand(map,7,1,i);
             }
             /**
              * sprawdzana dolna ściana
              */
             if (map[x-1][i]==3){
-                map[x-1][i]=8;
-                Expansion.expand(map,7,x-1,i);
+                if(i-1 > 0) Expansion.expand(map,7,x-1,i-1);
+                if(i+1 < y) Expansion.expand(map,7,x-1,i+1);
+                Expansion.expand(map,7,x-2,i);
             }
         }
     }
 
-    public void placingBulbsNextTo3(){
+
+
+    public void searching_field_with_equals_numer_ofFreeSpace(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++) {
-
+                if(map[i][k]==1 || map[i][k]==2 ||map[i][k]==3) {
+                    class Field{
+                        public int getxCord() {
+                            return xCord;
+                        }
+                        public int getyCord() {
+                            return yCord;
+                        }
+                        private int xCord;
+                        private int yCord;
+                        public Field(int xCord, int yCord) {
+                            this.xCord = xCord;
+                            this.yCord = yCord;
+                        }
+                    }
+                    Stack<Field> stack = new Stack();
+                    int valueOfField = map[i][k];
+                    int counter = 0;
+                    if (i - 1 > 0 && (map[i - 1][k] == 0 || map[i-1][k]==8)) {
+                        stack.push(new Field(i - 1, k));
+                        counter++;
+                    }
+                    if (k + 1 < y && (map[i][k + 1] == 0 || map[i][k+1]==8)) {
+                        stack.push(new Field(i,k+1));
+                        counter++;
+                    }
+                    if (i + 1 < x && (map[i + 1][k] == 0 || map[i+1][k]==8)) {
+                        stack.push(new Field(i+1,k));
+                        counter++;
+                    }
+                    if (k - 1 > 0 && (map[i][k - 1] == 0 || map[i][k-1]==8)) {
+                        stack.push(new Field(i,k-1));
+                        counter++;
+                    }
+                    if (valueOfField==counter) {
+                        while(!stack.empty()){
+                            Field field = stack.pop();
+                            Expansion.expand(map,7,field.xCord,field.yCord);
+                        }
+                    }
+                }
             }
         }
     }
@@ -109,7 +167,7 @@ public class Solver {
     }
 
     /**
-     *
+     * no co robi, stawia x
      */
     public void placingBulbsNextTo4(){
         for(int i = 0; i < x; i++){

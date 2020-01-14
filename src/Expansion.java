@@ -62,5 +62,4 @@ class Expansion {
             expandLeft(state,x,y-1);
         }
     }
-
 }
