@@ -31,7 +31,7 @@ public class Solver {
 
      */
     public void solve(){
-        addingXnextTo0();
+        adding_LIT_next_to_0();
         placingBulbsNextTo4();
         searching_3_on_the_walls();
         searching_2_in_corners();
@@ -108,7 +108,9 @@ public class Solver {
         }
     }
 
-
+    /**
+     *
+     */
     public void placingBulbsNextTo4(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++) {
@@ -133,7 +135,7 @@ public class Solver {
     /**
      * finding 0 and placing LIT-s next to 0
      */
-    public void addingXnextTo0(){
+    public void adding_LIT_next_to_0(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++){
                 if(map[i][k]==5){

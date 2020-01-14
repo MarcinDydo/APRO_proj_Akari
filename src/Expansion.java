@@ -2,11 +2,14 @@ class Expansion {
     static int[][] MAP;
     public static void expand(int[][] map, int state, int x, int y) {
         MAP = map;
-        if(state==7)MAP[x][y]=8;
-        expandDown(state,x,y);
-        expandUp(state,x,y);
-        expandRight(state,x,y);
-        expandLeft(state,x,y);
+        if(MAP[x][y]==0) {
+            if (state == 7) MAP[x][y] = 8;
+            expandDown(state, x, y);
+            expandUp(state, x, y);
+            expandRight(state, x, y);
+            expandLeft(state, x, y);
+        }
+        else return;
     }
     /**
      * Recursive method to light up or darken tiles in the down direction.
