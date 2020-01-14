@@ -1,0 +1,10 @@
+    0-Dark
+    1- Black_1
+    2- Black_2
+    3- Black_3
+    4- Black_4
+    5- Black_0
+    6- Black
+    7- Lit
+
+1.we wsyztskich 0 stawiamy od razu że to LIT czyli
