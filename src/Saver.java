@@ -1,9 +1,9 @@
 import java.io.*;
 
-class Save {
+class Saver {
     private Akari akari;
 
-    Save(Akari akari) {
+    Saver(Akari akari) {
         this.akari = akari;
     }
 
