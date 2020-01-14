@@ -1,2 +1,2 @@
-public class MainMenuPanel extends{
+public class MainMenuPanel {
 }
