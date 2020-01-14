@@ -14,10 +14,21 @@ class AkariMenuBar extends JMenuBar {
      * @throws HeadlessException Thrown when code that is dependent on a mouse is called in an environment that does not a mouse.
      */
     AkariMenuBar(Akari akari) throws HeadlessException {
-        JMenuItem generate  = new JMenuItem(new AbstractAction("Generate new level") {
+        JMenuItem Help = new JMenuItem(new AbstractAction("Help") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Generator generator = new Generator(akari.sx,akari.sy);
+                JOptionPane.showMessageDialog(Akari.p,
+                        "Akari is a logic puzzle with simple rules and challenging solutions.\n" +
+                                "\n" +
+                                "The rules are simple.Light Up is played on a rectangular grid.\n The grid has both black cells and white cells in it.\n The objective is to place light bulbs on the grid so that every white square is lit. \nA cell is illuminated by a light bulb if they're in the same row or column. \n Also, no light bulb may illuminate another light bulb.\n" +
+                                "Some of the black cells have numbers in them.\n A number in a black cell indicates how many light bulbs share an edge with that cell.\n" +
+                                "Left click a square to place a light bulb. Right click to mark with X.");
+            }
+        });
+        JMenuItem generate = new JMenuItem(new AbstractAction("Generate new level") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Generator generator = new Generator(akari.sx, akari.sy);
                 akari.swap(generator.getMAP(4));
             }
         });
@@ -131,6 +142,8 @@ class AkariMenuBar extends JMenuBar {
         difficulty.add(veryHard);
         file.add(Import);
         file.add(generate);
+        add(Help);
+
     }
 
 
