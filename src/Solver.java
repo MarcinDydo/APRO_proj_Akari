@@ -5,14 +5,6 @@ import java.io.IOException;
 public class Solver {
     private Akari akari;
     private int[][] map;
-
-    public int getX() {
-        return x;
-    }
-    public int getY() {
-        return y;
-    }
-
     private int x,y;
 
     public static void main(String[] args) throws IOException {
@@ -99,22 +91,20 @@ public class Solver {
     public void searching_2_in_corners(){
         int tempY = y;
         if(map[0][0]==2) {
-            map[1][0]=8;
-            map[0][1]=8;
             Expansion.expand(map,7,1,0);
             Expansion.expand(map,7,0,1);
         }
         if(map[0][y-1]==2) {
-            map[1][y-1]=8;
-            map[0][y-2]=8;
             Expansion.expand(map,7,1,y-1);
             Expansion.expand(map,7,0,y-2);
         }
         if(map[x-1][0]==2) {
-            Expansion.expand(map,7,x-1,0);
+            Expansion.expand(map,7,x-2,0);
+            Expansion.expand(map,7,x-1,1);
         }
         if(map[x-1][y-1]==2) {
-            Expansion.expand(map,7,x-1,y-1);
+            Expansion.expand(map,7,x-2,y-1);
+            Expansion.expand(map,7,x-1,y-2);
         }
     }
 
@@ -124,19 +114,15 @@ public class Solver {
             for(int k = 0; k < y; k++) {
                 if(map[i][k]==4) {
                     if (i - 1 > 0 && map[i - 1][k] == 0){
-                        map[i-1][k]=8;
                         Expansion.expand(map,7,i-1,k);
                     }
                     if( k+1 < y && map[i][k+1] == 0){
-                        map[i][k+1]=8;
                         Expansion.expand(map,7,i,k+1);
                     }
                     if( i+1 < x && map[i+1][k]==0){
-                        map[i+1][k]=8;
                         Expansion.expand(map,7,i+1,k);
                     }
                     if( k-1 > 0 && map[i][k-1]==0){
-                        map[i][k-1]=8;
                         Expansion.expand(map,7,i,k-1);
                     }
                 }
