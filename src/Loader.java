@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * Class to load csv files into akari game.
  */
-class Load {
+class Loader {
     private int[][] map;
     private int x;
     private int y;
@@ -17,7 +17,7 @@ class Load {
      * @param a Akari game throwing load.
      * @throws IOException No file found or file obstructed.
      */
-    Load(String filename,Akari a) throws IOException{
+    Loader(String filename, Akari a) throws IOException{
         read(filename);
         a.swap(map);
     }

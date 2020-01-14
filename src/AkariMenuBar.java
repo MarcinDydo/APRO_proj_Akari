@@ -35,7 +35,7 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 String loadPath = JOptionPane.showInputDialog(akari, "Where to load the file from?", "Specify the path...");
                 try {
-                    new Load("maps/"+loadPath+".csv",akari);
+                    new Loader("maps/"+loadPath+".csv",akari);
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(akari,
                             "Incorrect path");
@@ -47,7 +47,7 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String savePath = JOptionPane.showInputDialog(Akari.p, "Where to save the file?", "Specify the path...");
-                Save csvFile = new Save(akari);
+                Saver csvFile = new Saver(akari);
                 csvFile.saveToCSV(savePath);
 
             }
