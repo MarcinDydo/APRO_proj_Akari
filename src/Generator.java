@@ -27,16 +27,15 @@ public class Generator {
                 MAP[i][j] = assignRandom(ratio); //ratio blacks:whites - 1:n
             }
         }
-        correctMap();
+        //solver method to check and finish the map
     }
     /**
      * assigns random values depending on ratios
      * @param ratioBW ratio black to white
-     * @param ratioEN ratio empty to number
      * @return
      */
-    private int assignRandom(int ratioBW, int ratioEN) {
+    private int assignRandom(int ratio) {
         Random rand = new Random();
-        if (rand.nextInt(ratioBW) > 0) return 0;
+        if (rand.nextInt(ratio) > 0) return 0;
         else return 6;
     }
