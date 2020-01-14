@@ -2,6 +2,7 @@ class Expansion {
     static int[][] MAP;
     public static void expand(int[][] map, int state, int x, int y) {
         MAP = map;
+        if(state==7)MAP[x][y]=8;
         expandDown(state,x,y);
         expandUp(state,x,y);
         expandRight(state,x,y);
