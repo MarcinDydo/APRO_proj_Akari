@@ -6,6 +6,8 @@ Chlopaki taki zalozenia sa:
 * 4- Czarne z 4
 * 5- Czarne z 0
 * 6- Czarne bez niczego
+* 7 - lit
+* 8 - bulb
         
 Mapy najlepiej zrobic tablica int[][] z cyferkami bo latwo je bedzie zaladowac i tak mozemy zapisywac do csv
 
@@ -31,4 +33,8 @@ tak mże wygladać plik csv, po # rozpoczyna sie miejsce w ktorym zaisane sa kor
 #   -znak especjalny aby odroznic 
 1,3;4,5;1,5 (przyklad podawania kordynatów w ktorych miejscach owinny być żąróki
 ```
+# Ziutki
+Dydo - Generator
+Dadura - Solver
 
+Przekazujemy tablice intów na koncu
