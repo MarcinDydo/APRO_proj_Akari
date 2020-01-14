@@ -101,10 +101,4 @@ public class Generator {
             else return 5;
         }else return 6;
     }
-
-    public static void main(String[] args) {
-        Akari a=new Akari(1,1);
-        Generator gen = new Generator(10,10);
-        a.swap(gen.getMAP(4));
-    }
 }
