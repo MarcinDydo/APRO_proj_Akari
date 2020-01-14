@@ -4,7 +4,6 @@ public class Generator {
     private final int[][] MAP; //cannot point to any other array
 
     public int[][] getMAP(int ratio) {
-        makeMap(ratio);
         return MAP;
     }
 
@@ -16,6 +15,7 @@ public class Generator {
      */
     public Generator(int x, int y) {
         MAP = new int[x][y];
+         makeMap(3);
     }
 
     /**
@@ -29,9 +29,9 @@ public class Generator {
                 MAP[i][j] = assignRandom(ratio); //ratio blacks:whites - 1:n
             }
         }
-        do{
+        while(!checkForBlank()){
             solveCheck();//solver method to check and finish the map
-        }while(!chceckForBlank());
+        }
     }
     /**
      * assigns random values depending on ratios
@@ -43,7 +43,7 @@ public class Generator {
         else return 6;
     }
 
-    private boolean chceckForBlank(){
+    private boolean checkForBlank(){
         for (int[] i:MAP
         ) {
             for (int j:i
@@ -63,12 +63,14 @@ public class Generator {
         if(MAP[x][y] == 0){
                     MAP[x][y]=8;
                     Expansion.expand(MAP,7 ,x,y);
+
         }
     }
 
     public static void main(String[] args) {
+        Akari a=new Akari(1,1);
         Generator gen = new Generator(10,10);
-        gen.makeMap(3);
+        a.swap(gen.MAP);
         for (int[] i:gen.MAP
              ) {
             for (int j:i
