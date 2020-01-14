@@ -31,7 +31,7 @@ public class Generator {
     }
     /**
      * assigns random values depending on ratios
-     * @param ratioBW ratio black to white
+     * @param ratio black to white
      * @return
      */
     private int assignRandom(int ratio) {
@@ -39,3 +39,4 @@ public class Generator {
         if (rand.nextInt(ratio) > 0) return 0;
         else return 6;
     }
+}
