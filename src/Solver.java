@@ -5,21 +5,19 @@ import java.io.IOException;
 public class Solver {
     private Akari akari;
     private int[][] map;
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+
     private int x,y;
-    /*
-   0-Dark
-   1- Black_1
-   2- Black_2
-   3- Black_3
-   4- Black_4
-   5- Black_0
-   6- Black
-   7- Lit
-   8- Bulb
-   */
+
     public static void main(String[] args) throws IOException {
         Solver s = new Solver();
-        s.read("test_z4.csv");
+        s.read("dadura_test.csv");
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
@@ -44,61 +42,28 @@ public class Solver {
         addingXnextTo0();
         placingBulbsNextTo4();
         searching_3_on_the_walls();
+        searching_2_in_corners();
         placingBulbsNextTo3();
-
-        /*
-        znajdowanie najpier w rogach dwójek
-        znajdowanie na śicanach 3
-        i dopiero pozniej suzkanie ogolnie 3 i zaznaczanie
-     */
     }
 
-
+    /**
+     * searching block 3 on the walls, and then placeing the bulbs next to it and expanding the bulb
+     */
     public void searching_3_on_the_walls(){
         for(int i =0 ; i < x; i++){
-
             /**
-             * sprawdza najjpierw lewą śianę
+             * sprawdza najpierw lewą ścianę
              */
             if(map[i][0]==3){
-//                if(i-1 > 0 && map[i-1][0]==0) {
-//                    map[i-1][0]=8;
-//                    for(int q = 0 ; q < x - i -2; q++){   //x zmienić
-//                        map[i-1-q][0] = 7;
-//                    }
-//                }
-//                if(i+1< x && map[i+1][0]==0){
-//                    map[i+1][0]=8;
-//                    for(int q = 0; q < x -i-2; q++){   // czy x na mpewno q<x
-//                        map[i+1+q][0]=7;
-//                    }
-//                }
-//                if(map[i][1]==0){
-//                    map[i][1]=0;
-//                    for(int q = 0; q <y -1; q++){  // czy na pewno
-//                        map[i][1]=7;
-//                    }
-//                }
+                map[i][0]=8;
+                Expansion.expand(map,7,i,0);
             }
             /**
              * sprawdza prawą ścianę
              */
             if(map[i][y-1]==3){
-//                if(i-1 > 0 && map[i-1][y]==0) {
-//                    for(int q = 0 ; q < x ; q++){   //x zmienić
-//                        map[i-1-q][y] = 7;
-//                    }
-//                }
-//                if(i+1< x && map[i+1][y]==0){
-//                    for(int q = 0; q < x; q++){   // czy x na mpewno q<x
-//                        map[i+1+q][y]=7;
-//                    }
-//                }
-//                if(map[i][y-1]==0){
-//                    for(int q = 0; q <y -1; q++){  // czy na pewno
-//                        map[i][y-1]=7;
-//                    }
-//                }
+                map[i][y-1]=8;
+                Expansion.expand(map,7,i,y-1);
             }
         }
 
@@ -107,28 +72,52 @@ public class Solver {
              * sprawdzanie górna ściana
              */
             if(map[0][i]==3){
-
+                map[0][i]=8;
+                Expansion.expand(map,7,0,i);
             }
             /**
              * sprawdzana dolna ściana
              */
-            if (map[x-1][i] == 0){
-
+            if (map[x-1][i]==3){
+                map[x-1][i]=8;
+                Expansion.expand(map,7,x-1,i);
             }
         }
-
     }
 
     public void placingBulbsNextTo3(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++) {
-                if(map[i][k]==3){
 
-
-                }
             }
         }
     }
+
+    /**
+     * method search if in the corner there is a 2, and then set a bulb next to 2.
+     */
+    public void searching_2_in_corners(){
+        int tempY = y;
+        if(map[0][0]==2) {
+            map[1][0]=8;
+            map[0][1]=8;
+            Expansion.expand(map,7,1,0);
+            Expansion.expand(map,7,0,1);
+        }
+        if(map[0][y-1]==2) {
+            map[1][y-1]=8;
+            map[0][y-2]=8;
+            Expansion.expand(map,7,1,y-1);
+            Expansion.expand(map,7,0,y-2);
+        }
+        if(map[x-1][0]==2) {
+            Expansion.expand(map,7,x-1,0);
+        }
+        if(map[x-1][y-1]==2) {
+            Expansion.expand(map,7,x-1,y-1);
+        }
+    }
+
 
     public void placingBulbsNextTo4(){
         for(int i = 0; i < x; i++){
@@ -136,35 +125,19 @@ public class Solver {
                 if(map[i][k]==4) {
                     if (i - 1 > 0 && map[i - 1][k] == 0){
                         map[i-1][k]=8;
-                        for (int q = 1; q < x - i - 2; q++) {
-                            if (map[i - 1 - q][k] == 0) {
-                                map[i - 1 - q][k] = 7;
-                            } else break;
-                        }
+                        Expansion.expand(map,7,i-1,k);
                     }
                     if( k+1 < y && map[i][k+1] == 0){
                         map[i][k+1]=8;
-                        for (int q = 1; q < y - i - 2; q++) {  // sprawzic czy te -2 to dobrze tutaj pasuje
-                            if (map[i][k+1+q] == 0) {
-                                map[i][k+1+q] = 7;
-                            } else break;
-                        }
+                        Expansion.expand(map,7,i,k+1);
                     }
                     if( i+1 < x && map[i+1][k]==0){
                         map[i+1][k]=8;
-                        for (int q = 1; q < x - i - 2; q++) {
-                            if (map[i+1+q][k] == 0) {
-                                map[i+1+q][k] = 7;
-                            } else break;
-                        }
+                        Expansion.expand(map,7,i+1,k);
                     }
                     if( k-1 > 0 && map[i][k-1]==0){
                         map[i][k-1]=8;
-                        for (int q = 1; q < y - i - 2; q++) {
-                            if (map[i][k-1-q] == 0) {
-                                map[i][k-1-q] = 7;
-                            } else break;
-                        }
+                        Expansion.expand(map,7,i,k-1);
                     }
                 }
             }
