@@ -53,6 +53,7 @@ public class AkariButton extends JButton implements MouseListener {
                         setState(State.Bulb);
                         expand(this, State.Lit );
                         reloadLight();
+                        if (new Checker(akari).check()) JOptionPane.showMessageDialog(Akari.p, "You win!");
                     }
                     break;
                 case Bulb:
