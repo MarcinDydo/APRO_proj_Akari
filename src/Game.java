@@ -1,13 +1,13 @@
 
 public class Game extends Akari {
 
-    private Game(int size) {
-        super(size,size);
+    private Game(Difficulty difficulty) {
+        super(difficulty);
 
     }
 
     public static void main(String[] args){
-        Game a= new Game(10);
+        Game a= new Game(Difficulty.Medium);
 
     }
 }
