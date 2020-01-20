@@ -8,5 +8,7 @@ enum Difficulty {
     Difficulty(int size){
         this.size=size;
         }
-
+    public int getSize() {
+        return size;
+    }
 }
