@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solver {
@@ -10,13 +11,19 @@ public class Solver {
 
     public static void main(String[] args) throws IOException {
         Solver s = new Solver();
-        s.read("przyklad.csv");
+        s.read("dadura_test.csv");
+        //s.read("test_rozwiazany.csv");
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
         System.out.println(s.write());
     }
 
+    // ****** TUTAJ W KOMENTARZU PRZY PARAM jest // ABY NIE WYWALO BLEDU JA NA RAZIE ******
+    /**
+     * this constructor is to get a two dimensional table: int [][] map
+     * //@param akari class form where i get map[][]
+     */
 //    Solver(Akari akari){
 //        this.akari = akari;
 //        this.map = new int[akari.sx][akari.sy];
@@ -28,26 +35,148 @@ public class Solver {
 //    }
 
     public void solve(){
-        adding_LIT_next_to_0();
-        placingBulbsNextTo4();
-        searching_3_on_the_walls();
-        searching_2_in_corners();
-        searching_field_with_equals_numer_ofFreeSpace();
-//        searching_field_with_equals_numer_ofFreeSpace();
+        adding_LIT_next_to_0(); //działa
+        placing_bulbs_next_to_4(); //działa
+        searching_3_on_the_walls(); //działą
+        //searching_2_in_corners();  //działa ale jest niepotrzebna bo jest searching_field...
+        searching_field_with_equals_numer_of_free_space();  // działą
+        //back_tracking();   //do poprwany tylko to
     }
 
-    public boolean if_conflict(int i, int k){
-        boolean is_confict = false;
-        //map[i][k]
-//        for(int a = 0; a < ... ; a++){
-//            for (int b = 0; b < ...; b++){
-//
-//            }
-//        }
+    class Punkt{
+        private int xCord;
+        private int yCord;
+        private int value;
+        private boolean visted;
+
+        public boolean isVisted() {
+            return visted;
+        }
+
+        public void setVisted(boolean visted) {
+            this.visted = visted;
+        }
+
+        public Punkt(int xCord, int yCord, int value, boolean visited) {
+            this.xCord = xCord;
+            this.yCord = yCord;
+            this.value=value;
+            this.visted=visited;
+        }
+    }
+
+    public void back_tracking(){
+        ArrayList<Punkt> punkts = new ArrayList<>();
+        for(int i = 0; i < x ; i++) {
+            for (int k = 0; k < y; k++) {
+                if (map[i][k] == 0) punkts.add(new Punkt(i, k, map[i][k], false));
+                // punkts.add(new Field(i,k,map[i][k],false));  //obiekty dla całej mapy
+            }
+        }
+        solving(punkts);
+    }
+
+    //trzeba ogarnac backtracing, jak na razie to jest tylko jakiś pomysł, któy nie działą
+    public void solving(ArrayList<Punkt> fields){
+        int counter = 0;
+        Punkt field = fields.get(counter);
+        int tempX = field.xCord;
+        int tempY = field.yCord;
+        int tempValue = field.value;
+
+        while (!is_solved() && !field.isVisted()) {
 
 
+            if (no_collision(tempX, tempY)) map[tempX][tempY] = 8;
 
-        return is_confict;
+            while (!is_solved()) {
+                for (int i = 0; i < x; i++) {
+                    for (int k = 0; k < y; k++) {
+                        if (map[i][k] == 0) {
+                            if (no_collision(i, k)) {
+                                map[i][k] = 8;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @return return true if the map is solved and false if the map isnt solved
+     */
+    public boolean is_solved(){
+        for(int i = 0; i < x ; i++){
+            for(int k = 0; k < y; k++){
+                if(map[i][k]==0) return false;
+                if(map[i][k]==8) {
+                    if(!no_collision(i,k)) return false;
+                }
+            }
+        }
+        return  true;
+    }
+
+    /**
+     * @param i x cordinate
+     * @param k y  cordinate
+     * @return return true if the map[i][k] is a black , and false in other case
+     */
+    public boolean is_black_block(int i, int k){
+        if( map[i][k]==1 || map[i][k]==2 || map[i][k]==3 || map[i][k]==4 || map[i][k]==5 || map[i][k]==6){
+            return true;
+        }
+        else return false;
+    }
+
+    /* z tą metodą może być jakiś problem. w if dodałem kolejny wartunek że np k+j < y ,
+    wszescniej bez tego niby działało lae teraz nie sprawdzałem czy działa dalej
+    */
+    /**
+     * @param i x cordintate
+     * @param k y cordinate
+     * @return return true if there is no colision and we can place there a bulb
+     */
+    public boolean no_collision(int i, int k){
+        //sprawdzenie w prawą stornę
+        for(int j = 1; j < y - k; j++){  //jak j< k....
+            if(k+j<y && is_black_block(i,k+j)){
+                break;
+            }
+            if(k+j<y && map[i][k+j]==8){
+                return false;
+            }
+        }
+        //sprawdzenie dla lewą stronę
+        for(int j = 1; j < y - k ; j++){
+            if(k-j > 0 &&is_black_block(i,k-j)){
+                break;
+            }
+            if(k-j > 0 && map[i][k-j]==8){
+                return false;
+            }
+        }
+        //sprawdzenie do góry
+        for(int j = 1; j < x - i; j++){
+            if(i-j > 0 && is_black_block(i-j,k)){
+                break;
+            }
+            if(i-j > 0 &&map[i-j][k]==8){
+                return false;
+            }
+        }
+        //sprawdzenie do dołu
+        for(int j = 1; j < x - i; j++){
+            if(i+j < x && is_black_block(i+j,k)){
+                break;
+            }
+            if(i+j < x && map[i+j][k]==8){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -93,9 +222,7 @@ public class Solver {
         }
     }
 
-
-
-    public void searching_field_with_equals_numer_ofFreeSpace(){
+    public void searching_field_with_equals_numer_of_free_space(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++) {
                 if(map[i][k]==1 || map[i][k]==2 ||map[i][k]==3) {
@@ -116,19 +243,19 @@ public class Solver {
                     Stack<Field> stack = new Stack();
                     int valueOfField = map[i][k];
                     int counter = 0;
-                    if (i - 1 > 0 && (map[i - 1][k] == 0 || map[i-1][k]==8)) {
+                    if (i - 1 >= 0 && (map[i - 1][k] == 0 || map[i-1][k]==8) && map[i - 1][k] !=7 ) {
                         stack.push(new Field(i - 1, k));
                         counter++;
                     }
-                    if (k + 1 < y && (map[i][k + 1] == 0 || map[i][k+1]==8)) {
+                    if (k + 1 < y && (map[i][k + 1] == 0 || map[i][k+1]==8) && map[i][k+1] != 7) {
                         stack.push(new Field(i,k+1));
                         counter++;
                     }
-                    if (i + 1 < x && (map[i + 1][k] == 0 || map[i+1][k]==8)) {
+                    if (i + 1 < x && (map[i + 1][k] == 0 || map[i+1][k]==8) && map[i+1][k] != 7) {
                         stack.push(new Field(i+1,k));
                         counter++;
                     }
-                    if (k - 1 > 0 && (map[i][k - 1] == 0 || map[i][k-1]==8)) {
+                    if (k - 1 >= 0 && (map[i][k - 1] == 0 || map[i][k-1]==8) && map[i][k-1] != 7) {
                         stack.push(new Field(i,k-1));
                         counter++;
                     }
@@ -167,9 +294,9 @@ public class Solver {
     }
 
     /**
-     * no co robi, stawia x
+     * no co robi, stawia zarowki am gszie jest 4
      */
-    public void placingBulbsNextTo4(){
+    public void placing_bulbs_next_to_4(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++) {
                 if(map[i][k]==4) {
