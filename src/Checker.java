@@ -21,6 +21,7 @@ class Checker {
         for (int i = 0; i < akari.buttons.length; i++) {
             for (int j = 0; j < akari.buttons.length; j++) {
                 if (akari.buttons[i][j].state.getValue() < 1) return false;
+                if (akari.buttons[i][j].state.getValue() == 9) return false;
                 if (akari.buttons[i][j].state.getValue() < 6 && akari.buttons[i][j].state.getValue() > 0){
                     if(!blackCheck(akari.buttons[i][j])) return false;
                 }
