@@ -28,8 +28,8 @@ class AkariMenuBar extends JMenuBar {
         JMenuItem generate = new JMenuItem(new AbstractAction("Generate new level") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Generator generator = new Generator(akari.sx, akari.sy);
-                akari.swap(generator.getMAP(4));
+                Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
+                akari.swap(generator.getMAP(Akari.ratio));
             }
         });
         JMenu file = new JMenu("File");
@@ -99,42 +99,44 @@ class AkariMenuBar extends JMenuBar {
         JMenuItem veryEasy = new JMenuItem(new AbstractAction("Very Easy") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Generator generator = new Generator(6,6);
-                akari.swap(generator.getMAP(4));
+                akari.difficulty = Difficulty.veryEasy;
+                Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
+                akari.swap(generator.getMAP(Akari.ratio));
             }
         });
         JMenuItem Easy = new JMenuItem(new AbstractAction("Easy") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
-                Generator generator = new Generator(8,8);
-                akari.swap(generator.getMAP(4));
+                akari.difficulty = Difficulty.Easy;
+                Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
+                akari.swap(generator.getMAP(Akari.ratio));
             }
         });
         JMenuItem Medium = new JMenuItem(new AbstractAction("Medium") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
-                Generator generator = new Generator(10,10);
-                akari.swap(generator.getMAP(4));
+                akari.difficulty = Difficulty.Medium;
+                Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
+                akari.swap(generator.getMAP(Akari.ratio));
             }
         });
         JMenuItem Hard = new JMenuItem(new AbstractAction("Hard") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
-                Generator generator = new Generator(12,12);
-                akari.swap(generator.getMAP(4));
+                akari.difficulty = Difficulty.Hard;
+                Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
+                akari.swap(generator.getMAP(Akari.ratio));
             }
         });
         JMenuItem veryHard = new JMenuItem(new AbstractAction("Very Hard") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
-                Generator generator = new Generator(15,15);
-                akari.swap(generator.getMAP(4));
+                akari.difficulty = Difficulty.veryHard;
+                Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
+                akari.swap(generator.getMAP(Akari.ratio));
             }
         });
+
         difficulty.add(veryEasy);
         difficulty.add(Easy);
         difficulty.add(Medium);

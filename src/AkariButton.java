@@ -112,7 +112,7 @@ public class AkariButton extends JButton implements MouseListener {
      * @param a Button to start with.
      * @param state State to set.
      */
-    private void expand(AkariButton a, State state) {
+    public void expand(AkariButton a, State state) {
         expandRight(a,state);
         expandLeft(a,state);
         expandDown(a,state);
@@ -187,7 +187,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Method to reload all the Lights.
      */
-    private void reloadLight() {
+    public void reloadLight() {
         for(int i = 0; i< akari.sx; i++){
             for(int j = 0; j< akari.sy; j++){
                 if(akari.buttons[i][j].state==State.Bulb||akari.buttons[i][j].state==State.Error){

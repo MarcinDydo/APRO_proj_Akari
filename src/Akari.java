@@ -7,27 +7,28 @@ import java.awt.*;
 class Akari extends JFrame {
     int sx;
     int sy;
+    Difficulty difficulty = Difficulty.Medium;
     AkariButton[][] buttons;
     static Panel p = new Panel();
-
+    static int ratio = 3;
     /**
      * Constructor for akari game.
-     * @param x Akari height.
-     * @param y Akari width.
+     * @param diff - level of difficulty
      */
-    Akari(int x, int y) {
+    Akari(Difficulty diff) {
         super("Akari");
-        this.sx=x;
-        this.sy=y;
-        buttons=new AkariButton[x][y];
-        Generator generator = new Generator(x,y);
+        this.difficulty=diff;
+        this.sx=difficulty.getSize();
+        this.sy=difficulty.getSize();
+        buttons=new AkariButton[sx][sy];
+        Generator generator = new Generator(sx,sy);
         int[][] map = generator.getMAP(4);
-        setSize(40*x,40*y+40);
+        setSize(40*sx,40*sy+40);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        p.setLayout(new GridLayout(x,y));
-        for(int i=0;i<x;i++){
-            for(int j=0;j<y;j++){
+        p.setLayout(new GridLayout(sx,sy));
+        for(int i=0;i<sx;i++){
+            for(int j=0;j<sy;j++){
                 buttons[i][j] = new AkariButton(this, i,j, State.toState(map[i][j]));
                 p.add(buttons[i][j]);
             }
