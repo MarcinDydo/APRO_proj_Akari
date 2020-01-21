@@ -1,3 +1,8 @@
+package akari;
+
+import akari.maps.Expansion;
+import akari.view.Akari;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,7 +30,7 @@ public class Solver {
      * this constructor is to get a two dimensional table: int [][] map
      * //@param akari class form where i get map[][]
      */
-//    Solver(Akari akari){
+//    akari.Solver(akari.view.Akari akari){
 //        this.akari = akari;
 //        this.map = new int[akari.sx][akari.sy];
 //        for(int i=0;i<akari.sx;i++){

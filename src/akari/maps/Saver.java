@@ -1,9 +1,13 @@
+package akari.maps;
+
+import akari.view.Akari;
+
 import java.io.*;
 
-class Saver {
+public class Saver {
     private Akari akari;
 
-    Saver(Akari akari) {
+    public Saver(Akari akari) {
         this.akari = akari;
     }
 
@@ -27,7 +31,7 @@ class Saver {
      * if folder "maps"
      * @param savePath name of the file
      */
-    void saveToCSV(String savePath){
+    public void saveToCSV(String savePath){
         int[][] map = converter();
         int counter=0;
         File dir = new File("./maps");

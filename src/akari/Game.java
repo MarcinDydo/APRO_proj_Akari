@@ -1,3 +1,7 @@
+package akari;
+
+import akari.view.Akari;
+import akari.view.Difficulty;
 
 public class Game extends Akari {
 

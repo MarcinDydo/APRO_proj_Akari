@@ -1,15 +1,21 @@
+package akari.maps;
+
+import akari.view.Akari;
+import akari.view.AkariButton;
+import akari.view.State;
+
 /**
- * Checker class for akari
+ * akari.maps.Checker class for akari
  */
-class Checker {
+public class Checker {
     private Akari akari;
 
     /**
      * Constructor for checker.
      *
-     * @param akari Akari to check.
+     * @param akari akari.view.Akari to check.
      */
-    Checker(Akari akari) {
+    public Checker(Akari akari) {
         this.akari = akari;
     }
 
@@ -17,7 +23,7 @@ class Checker {
      * Method to check if the game is solved.
      * @return <code>true</code> if game is solved, <code>false</code otherwise.
      */
-    boolean check() {
+    public boolean check() {
         for (int i = 0; i < akari.buttons.length; i++) {
             for (int j = 0; j < akari.buttons.length; j++) {
                 if (akari.buttons[i][j].state.getValue() < 1) return false;

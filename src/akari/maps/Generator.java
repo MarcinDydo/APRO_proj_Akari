@@ -1,8 +1,10 @@
+package akari.maps;
+
 import java.util.Random;
 
 public class Generator {
     private final int[][] MAP; //cannot point to any other array
-    Random rand = new Random(); //useful random object :)
+    private Random rand = new Random(); //useful random object :)
 
     public int[][] getMAP(int ratio) {
         makeMap(ratio);

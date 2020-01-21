@@ -1,21 +1,24 @@
+package akari.view;
+
+import akari.maps.Generator;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class to represent Akari game.
+ * Class to represent akari.view.Akari game.
 */
-class Akari extends JFrame {
-    int sx;
+public class Akari extends JFrame {
+    public int sx;
     int sy;
-    Difficulty difficulty = Difficulty.Medium;
-    AkariButton[][] buttons;
-    static Panel p = new Panel();
-    static int ratio = 3;
+     Difficulty difficulty;
+    public AkariButton[][] buttons;
+     static Panel p = new Panel();static int ratio = 3;
     /**
      * Constructor for akari game.
      * @param diff - level of difficulty
      */
-    Akari(Difficulty diff) {
+    public Akari(Difficulty diff) {
         super("Akari");
         this.difficulty=diff;
         this.sx=difficulty.getSize();
@@ -43,7 +46,7 @@ class Akari extends JFrame {
     /**
      * Method for swaping akari tiles.
      */
-    void swap(int[][] map){
+    public void swap(int[][] map){
         setVisible(false);
         remove(p);
         sx=map.length;

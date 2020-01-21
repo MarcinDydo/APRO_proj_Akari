@@ -34,7 +34,7 @@ tak mże wygladać plik csv, po # rozpoczyna sie miejsce w ktorym zaisane sa kor
 1,3;4,5;1,5 (przyklad podawania kordynatów w ktorych miejscach owinny być żąróki
 ```
 # Ziutki
-Dydo - Generator
-Dadura - Solver
+Dydo - akari.maps.Generator
+Dadura - akari.Solver
 
 Przekazujemy tablice intów na koncu

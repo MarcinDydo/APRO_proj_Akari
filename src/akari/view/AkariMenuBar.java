@@ -1,3 +1,10 @@
+package akari.view;
+
+import akari.maps.Checker;
+import akari.maps.Generator;
+import akari.maps.Loader;
+import akari.maps.Saver;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +17,7 @@ class AkariMenuBar extends JMenuBar {
     /**
      * Constructor for Menu bar.
      *
-     * @param akari Akari this menu bar will be attached to.
+     * @param akari akari.view.Akari this menu bar will be attached to.
      * @throws HeadlessException Thrown when code that is dependent on a mouse is called in an environment that does not a mouse.
      */
     AkariMenuBar(Akari akari) throws HeadlessException {
@@ -18,7 +25,7 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 JOptionPane.showMessageDialog(Akari.p,
-                        "Akari is a logic puzzle with simple rules and challenging solutions.\n" +
+                        "akari.view.Akari is a logic puzzle with simple rules and challenging solutions.\n" +
                                 "\n" +
                                 "The rules are simple.Light Up is played on a rectangular grid.\n The grid has both black cells and white cells in it.\n The objective is to place light bulbs on the grid so that every white square is lit. \nA cell is illuminated by a light bulb if they're in the same row or column. \n Also, no light bulb may illuminate another light bulb.\n" +
                                 "Some of the black cells have numbers in them.\n A number in a black cell indicates how many light bulbs share an edge with that cell.\n" +
@@ -40,12 +47,12 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (new Checker(akari).check()) {
-                    Object[] options = {"New Game",
-                            "Save Game",
+                    Object[] options = {"New akari.Game",
+                            "Save akari.Game",
                             "Return to game"};
                     int n = JOptionPane.showOptionDialog(akari,
                             "You won! What would you like to do next?",
-                            "Game Won",
+                            "akari.Game Won",
                             JOptionPane.YES_NO_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
                             null,

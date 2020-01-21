@@ -1,4 +1,7 @@
-import java.awt.*;
+package akari.maps;
+
+import akari.view.Akari;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -6,7 +9,7 @@ import java.io.IOException;
 /**
  * Class to load csv files into akari game.
  */
-class Loader {
+public class Loader {
     private int[][] map;
     private int x;
     private int y;
@@ -14,10 +17,10 @@ class Loader {
     /**
      *
      * @param filename Path to file.
-     * @param a Akari game throwing load.
+     * @param a akari.view.Akari game throwing load.
      * @throws IOException No file found or file obstructed.
      */
-    Loader(String filename, Akari a) throws IOException{
+    public Loader(String filename, Akari a) throws IOException{
         read(filename);
         a.swap(map);
     }

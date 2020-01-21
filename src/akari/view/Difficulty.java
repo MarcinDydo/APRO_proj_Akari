@@ -1,4 +1,6 @@
-enum Difficulty {
+package akari.view;
+
+public enum Difficulty {
     veryEasy(6),
     Easy(8),
     Medium(10),

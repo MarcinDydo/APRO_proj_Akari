@@ -1,6 +1,8 @@
+package akari.view;
+
 import javax.swing.*;
 /**
- * Enum class to represent states of Akari tile
+ * Enum class to represent states of akari.view.Akari tile
  */
 public enum State {
     Error(-1),
@@ -14,7 +16,7 @@ public enum State {
     /**
      * Icon that can represent tile state.
      */
-    ImageIcon icon;
+    public ImageIcon icon;
     private int value;
     public int getValue() {
         return value;
@@ -22,34 +24,34 @@ public enum State {
 
     /**
      * constructor
-     * @param value
+     * @param value value.
      */
     State(int value){
         switch (value){
             case -1:
-                this.icon=new ImageIcon(this.getClass().getResource("bulb_conflict.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/bulb_conflict.png")); break;
             case 0:
-                this.icon=new ImageIcon(this.getClass().getResource("dark.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/dark.png")); break;
             case 1:
-                this.icon=new ImageIcon(this.getClass().getResource("black_1.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/black_1.png")); break;
             case 2:
-                this.icon=new ImageIcon(this.getClass().getResource("black_2.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/black_2.png")); break;
             case 3:
-                this.icon=new ImageIcon(this.getClass().getResource("black_3.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/black_3.png")); break;
             case 4:
-                this.icon=new ImageIcon(this.getClass().getResource("black_4.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/black_4.png")); break;
             case 5:
-                this.icon=new ImageIcon(this.getClass().getResource("black_0.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/black_0.png")); break;
             case 6:
-                this.icon=new ImageIcon(this.getClass().getResource("black.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/black.png")); break;
             case 7:
-                this.icon=new ImageIcon(this.getClass().getResource("lit.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/lit.png")); break;
             case 8:
-                this.icon=new ImageIcon(this.getClass().getResource("bulb.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/bulb.png")); break;
             case 9:
-                this.icon=new ImageIcon(this.getClass().getResource("dark_cross.png")); break;
+                this.icon=new ImageIcon(this.getClass().getResource("/dark_cross.png")); break;
             case 10:
-                 this.icon=new ImageIcon(this.getClass().getResource("lit_cross.png")); break;
+                 this.icon=new ImageIcon(this.getClass().getResource("/lit_cross.png")); break;
         }
         this.value=value;
     }
@@ -57,7 +59,7 @@ public enum State {
     /**
      * converts number to State
      * @param fromMap integer representing tile
-     * @return
+     * @return State
      */
     public static State toState(int fromMap){
         switch (fromMap) {

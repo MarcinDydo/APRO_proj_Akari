@@ -1,18 +1,24 @@
+package akari.view;
+
+import akari.maps.Checker;
+import akari.maps.Generator;
+import akari.maps.Saver;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 /**
- * Class to represent One Akari Tile.
+ * Class to represent One akari.view.Akari Tile.
  */
 public class AkariButton extends JButton implements MouseListener {
-    State state;
-    private Akari akari;
-    private boolean cross;
-    int x,y;
+    public State state;
+    public Akari akari;
+    public boolean cross;
+    public int x,y;
 
     /**
      * Constructor for tile.
-     * @param akari Akari game that this tile belongs to.
+     * @param akari akari.view.Akari game that this tile belongs to.
      * @param x X coordinate of this tile in akari game.
      * @param y Y coordinate of this tile in akari game.
      * @param state indicator of state and icon of the tile
@@ -54,12 +60,12 @@ public class AkariButton extends JButton implements MouseListener {
                         expand(this, State.Lit );
                         reloadLight();
                         if (new Checker(akari).check()) {
-                            Object[] options = {"New Game",
-                                    "Save Game",
+                            Object[] options = {"New akari.Game",
+                                    "Save akari.Game",
                                     "Return to game"};
                             int n = JOptionPane.showOptionDialog(akari,
                                     "You won! What would you like to do next?",
-                                    "Game Won",
+                                    "akari.Game Won",
                                     JOptionPane.YES_NO_CANCEL_OPTION,
                                     JOptionPane.QUESTION_MESSAGE,
                                     null,
@@ -110,9 +116,9 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Recursive method to light up or darken tiles.
      * @param a Button to start with.
-     * @param state State to set.
+     * @param state akari.view.State to set.
      */
-    public void expand(AkariButton a, State state) {
+    private void expand(AkariButton a, State state) {
         expandRight(a,state);
         expandLeft(a,state);
         expandDown(a,state);
@@ -122,7 +128,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Recursive method to light up or darken tiles in the south direction.
      * @param a Button to start with.
-     * @param state State to set.
+     * @param state akari.view.State to set.
      */
     private void expandDown(AkariButton a, State state) {
         int x = a.x;
@@ -138,7 +144,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Recursive method to light up or darken tiles in the north direction.
      * @param a Button to start with.
-     * @param state State to set.
+     * @param state akari.view.State to set.
      */
     private void expandUp(AkariButton a, State state) {
         int x = a.x;
@@ -154,7 +160,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Recursive method to light up or darken tiles in the right direction.
      * @param a Button to start with.
-     * @param state State to set.
+     * @param state akari.view.State to set.
      */
     private void expandRight(AkariButton a, State state) {
         int x = a.x;
@@ -170,7 +176,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Recursive method to light up or darken tiles in the left direction.
      * @param a Button to start with.
-     * @param state State to set.
+     * @param state akari.view.State to set.
      */
     private void expandLeft(AkariButton a, State state) {
         int x = a.x;
@@ -187,7 +193,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Method to reload all the Lights.
      */
-    public void reloadLight() {
+    private void reloadLight() {
         for(int i = 0; i< akari.sx; i++){
             for(int j = 0; j< akari.sy; j++){
                 if(akari.buttons[i][j].state==State.Bulb||akari.buttons[i][j].state==State.Error){

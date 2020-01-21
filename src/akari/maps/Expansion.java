@@ -1,5 +1,7 @@
-class Expansion {
-    static int[][] MAP;
+package akari.maps;
+
+public class Expansion {
+    private static int[][] MAP;
     public static void expand(int[][] map, int state, int x, int y) {
         MAP = map;
         if(MAP[x][y]==0) {
@@ -9,7 +11,6 @@ class Expansion {
             expandRight(state, x, y);
             expandLeft(state, x, y);
         }
-        else return;
     }
     /**
      * Recursive method to light up or darken tiles in the down direction.
