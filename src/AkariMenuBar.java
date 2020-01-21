@@ -7,6 +7,7 @@ import java.io.IOException;
  * Class to represent MenuBar of the akari game.
  */
 class AkariMenuBar extends JMenuBar {
+    Score score = new Score();
     /**
      * Constructor for Menu bar.
      *
@@ -137,7 +138,6 @@ class AkariMenuBar extends JMenuBar {
                 akari.swap(generator.getMAP(Akari.ratio));
             }
         });
-
         difficulty.add(veryEasy);
         difficulty.add(Easy);
         difficulty.add(Medium);
@@ -146,7 +146,7 @@ class AkariMenuBar extends JMenuBar {
         file.add(Import);
         file.add(generate);
         add(Help);
-
+        add(score);
     }
 
 

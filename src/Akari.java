@@ -11,6 +11,7 @@ class Akari extends JFrame {
     AkariButton[][] buttons;
     static Panel p = new Panel();
     static int ratio = 3;
+    Score score = new Score();
     /**
      * Constructor for akari game.
      * @param diff - level of difficulty
@@ -33,13 +34,20 @@ class Akari extends JFrame {
                 p.add(buttons[i][j]);
             }
         }
-        add(p);
         this.setJMenuBar(new AkariMenuBar(this));
+        add(p);
         setVisible(true);
-
     }
-
-
+    /*
+    private void AddPanel(Panel p){
+        JPanel mainPanel = new JPanel();
+        mainPanel.add(score);
+        mainPanel.add(p);
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        add(mainPanel);
+        pack();
+    }
+     */
     /**
      * Method for swaping akari tiles.
      */
