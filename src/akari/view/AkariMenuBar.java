@@ -17,7 +17,7 @@ class AkariMenuBar extends JMenuBar {
     /**
      * Constructor for Menu bar.
      *
-     * @param akari akari.view.Akari this menu bar will be attached to.
+     * @param akari Akari this menu bar will be attached to.
      * @throws HeadlessException Thrown when code that is dependent on a mouse is called in an environment that does not a mouse.
      */
     AkariMenuBar(Akari akari) throws HeadlessException {
@@ -47,12 +47,12 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (new Checker(akari).check()) {
-                    Object[] options = {"New akari.Game",
-                            "Save akari.Game",
+                    Object[] options = {"New Game",
+                            "Save Game",
                             "Return to game"};
                     int n = JOptionPane.showOptionDialog(akari,
                             "You won! What would you like to do next?",
-                            "akari.Game Won",
+                            "Game Won",
                             JOptionPane.YES_NO_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
                             null,
