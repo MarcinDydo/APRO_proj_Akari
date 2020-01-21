@@ -82,10 +82,11 @@ class AkariMenuBar extends JMenuBar {
         JMenuItem save = new JMenuItem(new AbstractAction("Save as CSV") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String savePath = JOptionPane.showInputDialog(Akari.p, "Where to save the file?", "Specify the path...");
-                Saver csvFile = new Saver(akari);
-                csvFile.saveToCSV(savePath);
-
+                try {
+                    String savePath = JOptionPane.showInputDialog(Akari.p, "Where to save the file?", "");
+                    Saver csvFile = new Saver(akari);
+                    csvFile.saveToCSV(savePath);
+                }catch (NullPointerException ignored){}
             }
         });
         file.add(save);

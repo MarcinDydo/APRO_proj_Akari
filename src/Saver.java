@@ -41,7 +41,7 @@ class Saver {
         File csvFile = new File("./maps/" + savePath + ".csv");
         if(savePath.isEmpty()) {
             do {
-                csvFile = new File("./maps/test#" + counter + ".csv");
+                csvFile = new File("./maps/map#" + counter + ".csv");
                 counter++;
             } while (csvFile.exists());
         }
