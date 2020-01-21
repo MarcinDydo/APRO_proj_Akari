@@ -8,6 +8,7 @@ public class Solver {
     private Akari akari;
     private int[][] map;
     private int x,y;
+    private Punkt[][] punkty;
 
     public static void main(String[] args) throws IOException {
         Solver s = new Solver();
@@ -41,12 +42,19 @@ public class Solver {
         //searching_2_in_corners();  //działa ale jest niepotrzebna bo jest searching_field...
         searching_field_with_equals_numer_of_free_space();  // działą
         //back_tracking();   //do poprwany tylko to
+        brute_force();
     }
 
     class Punkt{
+
         private int xCord;
         private int yCord;
         private int value;
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
         private boolean visted;
 
         public boolean isVisted() {
@@ -66,40 +74,71 @@ public class Solver {
     }
 
     public void back_tracking(){
-        ArrayList<Punkt> punkts = new ArrayList<>();
+        //ArrayList<Punkt> punkts = new ArrayList<>();
+        Punkt[][] punkts = new Punkt[x][y];
         for(int i = 0; i < x ; i++) {
             for (int k = 0; k < y; k++) {
-                if (map[i][k] == 0) punkts.add(new Punkt(i, k, map[i][k], false));
-                // punkts.add(new Field(i,k,map[i][k],false));  //obiekty dla całej mapy
+                //if (map[i][k] == 0) punkts.add(new Punkt(i, k, map[i][k], false));
+                //punkts.add(new Punkt(i,k,map[i][k],false));  //obiekty dla całej mapy
+                punkts[i][k] = new Punkt(i,k,map[i][k],false);
             }
         }
+        this.punkty=punkts;
         solving(punkts);
     }
 
     //trzeba ogarnac backtracing, jak na razie to jest tylko jakiś pomysł, któy nie działą
-    public void solving(ArrayList<Punkt> fields){
-        int counter = 0;
-        Punkt field = fields.get(counter);
-        int tempX = field.xCord;
-        int tempY = field.yCord;
-        int tempValue = field.value;
+    public void solving(Punkt[][] fields){
 
-        while (!is_solved() && !field.isVisted()) {
+//        punkty[1][1].yCord;
+//        punkty[1][1].xCord;
+//        punkty[1][1].visted;
+//        punkty[1][1].value;
 
+//        while(!is_solved()){
+//            int tempX, tempY;
+//            for(int i = 0; i < x ; i++) {
+//                for (int k = 0; k < y; k++) {
+//                    if(punkty[i][k].value==0 && no_collision(i,k) && !punkty[i][k].isVisted()){
+//                        map[i][k]=8;
+//                        punkty[i][k].setValue(8);
+//                        solving(fields);
+//                    }
+//                    if(punkty[i][k].value==8 && !no_collision(i,k) && !punkty[i][k].isVisted()){
+//                        punkty[i][k].setVisted(true);
+//                    }
+//                }
+//            }
+//        }
+    }
 
-            if (no_collision(tempX, tempY)) map[tempX][tempY] = 8;
-
-            while (!is_solved()) {
-                for (int i = 0; i < x; i++) {
-                    for (int k = 0; k < y; k++) {
-                        if (map[i][k] == 0) {
-                            if (no_collision(i, k)) {
-                                map[i][k] = 8;
-                            }
-                        }
+    public void brute_force(){
+        int rand = (int) (Math.random()*10);
+        ArrayList<Punkt> punkts = new ArrayList<>();
+        for(int i = 0; i < x ; i++){
+            for(int k = 0; k < y; k++) {
+                if(map[i][k]==0){
+                    punkts.add(new Punkt(i,k,map[i][k],false));
+                }
+            }
+        }
+        while(!is_solved()){
+            rand = (int) (Math.random()*2);
+            if(rand > punkts.size()){
+                brute_force();
+            }
+            Punkt punkt = punkts.get(rand);
+            if(no_collision(punkt.xCord,punkt.yCord)){
+                map[punkt.xCord][punkt.yCord] = 8;
+            }
+            for(int i = 0; i < x ; i++){
+                for(int k = 0; k < y; k++) {
+                    if(map[i][k]==0) {
+                        brute_force();
                     }
                 }
             }
+
         }
     }
 
@@ -110,13 +149,15 @@ public class Solver {
     public boolean is_solved(){
         for(int i = 0; i < x ; i++){
             for(int k = 0; k < y; k++){
-                if(map[i][k]==0) return false;
+                if(map[i][k]==0) {
+                    return false;
+                }
                 if(map[i][k]==8) {
                     if(!no_collision(i,k)) return false;
                 }
             }
         }
-        return  true;
+        return true;
     }
 
     /**
