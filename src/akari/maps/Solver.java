@@ -1,25 +1,23 @@
-package akari;
+package akari.maps;
 
-import akari.maps.Expansion;
 import akari.view.Akari;
+import akari.view.Difficulty;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solver {
     private Akari akari;
     private int[][] map;
     private int x, y;
-    private Punkt[][] punkty;
+    private Stack<int[][]> stack;
 
     public static void main(String[] args) throws IOException {
         //Solver s = new Solver(new Akari(Difficulty.Easy));
         Solver s = new Solver();
-        s.read("maps/cd.csv");
-        //s.read("test_rozwiazany.csv");
+        s.read("akari.csv");
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
@@ -35,7 +33,7 @@ public class Solver {
      * this constructor is to get a two dimensional table: int [][] map
      * //@param akari class form where i get map[][]
      */
-//    akari.Solver(akari.view.Akari akari){
+//    akari.maps.Solver(akari.view.Akari akari){
 //        this.akari = akari;
 //        this.map = new int[akari.sx][akari.sy];
 //        for(int i=0;i<akari.sx;i++){
@@ -48,89 +46,253 @@ public class Solver {
         adding_LIT_next_to_0(); //działa
         placing_bulbs_next_to_4(); //działa
         searching_3_on_the_walls(); //działą
-        //searching_2_in_corners();  //działa ale jest niepotrzebna bo jest searching_field...
+        searching_2_in_corners();  //działa ale jest niepotrzebna bo jest searching_field...
         searching_field_with_equals_numer_of_free_space();  // działą
+        System.out.println("-------- Działąjąca część -----------");
+        System.out.println(write());
 
-        ostateczna_metoda();
+        //back_tracking();
+
     }
+
+    public void back_tracking(){
+        int flag = 0;
+//        Stack<int[][]> staczek = new Stack<>();
+//        staczek.push(map); //dodanie may na sam poczatek aby było gdzie wrócic na sam poczatek
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if (map[i][k] == 0 && no_collision(i, k) && black_fields_in_4_sides_equals_number_of_bulbs(i,k)) {
+                    Expansion.expand(map,7,i,k);
+                    flag = 1;
+                    //staczek.push(map);
+                    //if (is_on_map_white_field()) back_tracking();
+                }
+            }
+        }
+        System.out.println(flag);
+    }
+
+    /**
+     * sprawdza czy w 4 strony jet odpowiednia ilosc zarowek
+     * @param i  parametr x dla zaroweki
+     * @param k paramtery y dla zarowki
+     * @return gdy jest za duzo sasiadow to zwraca false, gdy est za malo zarowek to stawia true
+     */
+    public boolean  black_fields_in_4_sides_equals_number_of_bulbs(int i, int k){
+        i = i -1;
+        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
+                    /*
+                    gdy jest za duzo sasiadow to zwraca false
+                    gdy est za malo zarowek to stawia true
+                     */
+            int valueOfField = map[i][k];
+            int counter = 0;
+            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
+                counter++;
+            }
+            if (k + 1 < y && map[i][k + 1] == 8) {
+                counter++;
+            }
+            if (i + 1 < x && map[i + 1][k] == 8 ) {
+
+                counter++;
+            }
+            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
+                counter++;
+            }
+            if (valueOfField > counter) {
+                return  true;
+            }
+            if(valueOfField < counter){
+                return false;
+            }
+            if(valueOfField == counter) System.out.println("rowna ilosc");
+        }
+        i = i+1; k = k+1;
+        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
+                    /*
+                    gdy jest za duzo sasiadow to zwraca false
+                    gdy est za malo zarowek to stawia true
+                     */
+            int valueOfField = map[i][k];
+            int counter = 0;
+            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
+                counter++;
+            }
+            if (k + 1 < y && map[i][k + 1] == 8) {
+                counter++;
+            }
+            if (i + 1 < x && map[i + 1][k] == 8 ) {
+
+                counter++;
+            }
+            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
+                counter++;
+            }
+            if (valueOfField > counter) {
+                return  true;
+
+            }
+            if(valueOfField < counter){
+                return false;
+            }
+            if(valueOfField == counter) System.out.println("rowna ilosc");
+        }
+        i = i+1; k = k-1;
+        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
+                    /*
+                    gdy jest za duzo sasiadow to zwraca false
+                    gdy est za malo zarowek to stawia true
+                     */
+            int valueOfField = map[i][k];
+            int counter = 0;
+            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
+                counter++;
+            }
+            if (k + 1 < y && map[i][k + 1] == 8) {
+                counter++;
+            }
+            if (i + 1 < x && map[i + 1][k] == 8 ) {
+
+                counter++;
+            }
+            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
+                counter++;
+            }
+            if (valueOfField > counter) {
+                return  true;
+
+            }
+            if(valueOfField < counter){
+                return false;
+            }
+            if(valueOfField == counter) System.out.println("rowna ilosc");
+        }
+        i = i-1; k = k-1;
+        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
+                    /*
+                    gdy jest za duzo sasiadow to zwraca false
+                    gdy est za malo zarowek to stawia true
+                     */
+            int valueOfField = map[i][k];
+            int counter = 0;
+            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
+                counter++;
+            }
+            if (k + 1 < y && map[i][k + 1] == 8) {
+                counter++;
+            }
+            if (i + 1 < x && map[i + 1][k] == 8 ) {
+
+                counter++;
+            }
+            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
+                counter++;
+            }
+            if (valueOfField > counter) {
+                return  true;
+
+            }
+            if(valueOfField < counter){
+                return false;
+            }
+            if(valueOfField == counter) System.out.println("rowna ilosc");
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param i x cordinate
+     * @param k y cordinate
+     * @return return true if i and k isn`t out of band
+     */
+    public boolean chceck_if_i_and_k_is_correct(int i, int k){
+        if(i >=0 && i < x && k >=0 && k < y) return true;
+        return false;
+    }
+
+    /**
+     * szukam sobie jakiegos czarnego pola, od 1 do 3 i sprawdzam czy wokół niego jest opcja wstawienia żąrówki
+     * @return
+     */
+    public boolean  all_black_equal_number_of_bulbs(){
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if(map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3){
+                    /*
+                    //szukam po sasiadach cy ma taka sama ilosc sasiwadow, jesli ma odpowiednioa ilosc sasiady to zwraca true
+                    // jeśli nie ma idpowiedniej ilosci sasiadow zwraa flase
+                    // robi to w przypadchch gdy jest za duzo albo za mało
+
+                    gdy jest za duzo sasiadow to zwraca false
+                    gdy est za malo zarowek to stawia true
+                     */
+                    class Field {
+                        public int getxCord() {
+                            return xCord;
+                        }
+
+                        public int getyCord() {
+                            return yCord;
+                        }
+
+                        private int xCord;
+                        private int yCord;
+
+                        public Field(int xCord, int yCord) {
+                            this.xCord = xCord;
+                            this.yCord = yCord;
+                        }
+                    }
+                    int valueOfField = map[i][k];
+                    int counter = 0;
+                    if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
+                        counter++;
+                    }
+                    if (k + 1 < y && map[i][k + 1] == 8) {
+                        counter++;
+                    }
+                    if (i + 1 < x && map[i + 1][k] == 8 ) {
+
+                        counter++;
+                    }
+                    if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
+                        counter++;
+                    }
+                    if (valueOfField > counter) {
+                        return  true;
+
+                    }
+                    if(valueOfField < counter){
+                        return false;
+                    }
+                    if(valueOfField == counter) System.out.println("rowna ilosc");
+                }
+            }
+        }
+        return true;
+    }
+
 
 
     /**
      * mam mape nie odyfikwoana przez ta ostatnia metode
      * wrzucam na stosik
      *
+     *
+     * sprawdzam czy moge wstawić żarówke według zasad ktore s apowyzej, i wrzucam na stos, jeśli coś później pójdzie
+     * nie tak to stack.pop() aby wywalić ten błąd i elo
+     *
      */
-
-
-    public void ostateczna_metoda() {
-        Stack<int[][]> stack = new Stack();
-        boolean flag = false;
-
-        //while(!is_solved()){
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 0 && no_collision(i, k)) {
-                    Expansion.expand(map, 7, i, k);
-                    stack.push(map);
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) break;
-        }
-
-        boolean temp = false;
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 0 && !no_collision(i, k)) {
-                    map[i][k] = 7;
-                    temp = true;
-                    break;
-                }
-            }
-            if (temp) ostateczna_metoda();
-        }
-        if (!is_solved()) ostateczna_metoda();
-    }
-
 
     public boolean is_on_map_white_field() {
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
                 if (map[i][k] == 0) return true;
-
             }
         }
         return false;
-    }
-
-
-    class Punkt {
-
-        private int xCord;
-        private int yCord;
-        private int value;
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        private boolean visted;
-
-        public boolean isVisted() {
-            return visted;
-        }
-
-        public void setVisted(boolean visted) {
-            this.visted = visted;
-        }
-
-        public Punkt(int xCord, int yCord, int value, boolean visited) {
-            this.xCord = xCord;
-            this.yCord = yCord;
-            this.value = value;
-            this.visted = visited;
-        }
     }
 
 
@@ -146,6 +308,9 @@ public class Solver {
                 if (map[i][k] == 8) {
                     if (!no_collision(i, k)) return false;
                 }
+                /**
+                 * dodać jeszcze warunek spr czy dla wsyztskich blookow z numerami zgadza sie liczba zarowek
+                 */
             }
         }
         return true;
