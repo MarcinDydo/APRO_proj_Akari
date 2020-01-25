@@ -13,7 +13,7 @@ public class Akari extends JFrame {
     int sy;
      Difficulty difficulty;
     public AkariButton[][] buttons;
-     static Panel p = new Panel();static int ratio = 3;
+     static Panel p = new Panel();static int ratio = 4;
     /**
      * Constructor for akari game.
      * @param diff - level of difficulty

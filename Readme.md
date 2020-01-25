@@ -35,6 +35,6 @@ tak mże wygladać plik csv, po # rozpoczyna sie miejsce w ktorym zaisane sa kor
 ```
 # Ziutki
 Dydo - akari.maps.Generator
-Dadura - akari.Solver
+Dadura - akari.maps.Solver
 
 Przekazujemy tablice intów na koncu
