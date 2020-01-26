@@ -16,16 +16,17 @@ public class Solver_v2 {
     private Stack<int[][]> stack;
     private Stack<int[]> tabOfMoves;
     private Field[][] fields;
-    private int tempX, tempY;
+    private ArrayList<int[][]> arrayList;
 
     public Solver_v2() {
         this.stack = new Stack<>();
         this.tabOfMoves = new Stack<>();
+        this.arrayList = new ArrayList<>();
     }
 
     public static void main(String[] args) throws IOException {
         Solver_v2 s = new Solver_v2();
-        s.read("maps/test12" + ".csv");  //nazwa
+        s.read("akari" + ".csv");  //nazwa
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
@@ -40,41 +41,82 @@ public class Solver_v2 {
         set_bulbs_next_to_4();
         set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0);
         set_cross_if_black_block_value_equals_number_of_bulbs();
-        stack.push(rewriting_map());  //przepisanie mapy, aby nie zpaisywanie referencji ale faktyczna mape
+        add_all_on_stack();
         back_tracking();
+
     }
 
     /**
-     * algoyrthm of BACK_TRACKINGGGGGGGG KING
+     * metohod that add all possible dirtst moves on stack
      */
-    public void back_tracking() {
-        if (!is_solved()) {
-            if(searching_field(0)) {  //może jeszcze czy jest 9
-                find_white_field(); int i = tempX, k = tempY;
-                if (check_the_bounds(i, k) && (map[i][k] == 0) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
-                    Expansion.expand(map, 7, i, k);
-                    set_cross_if_black_block_value_equals_number_of_bulbs();
-                    stack.push(rewriting_map());
-                    tabOfMoves.push(new int[] {i,k});  //tablica ktora pretrzymuje w którym miejscu żarówka się zmieniła //int temp[] = new int[] {i,k};
-                    back_tracking();
+    public void add_all_on_stack(){
+        stack.push(rewriting_map());
+        for(int i = 0; i < x; i++){
+            for(int k = 0; k < y; k++){
+                if(map[i][k]==0){
+                    int[][] temp = rewriting_map();
+                    Expansion.expand(temp,7,i,k);
+                    stack.push(temp);
                 }
-                else {
-                    map[i][k] = 9;
-                    stack.push(rewriting_map());
-                    back_tracking();
-                }
-            }
-            else{
-                if(stack.empty() || tabOfMoves.empty()) return;
-                stack.pop();
-                map = stack.pop();
-                int temp[] = tabOfMoves.pop();
-                map[temp[0]][temp[1]]=9;
-                stack.push(rewriting_map());
-                back_tracking();
             }
         }
     }
+
+
+    public void back_tracking(){
+        while (!stack.empty()){
+            boolean flag = false;
+            map = stack.pop();
+            for(int i = 0; i < x; i++) {
+                for (int k = 0; k < y; k++) {
+                    if (map[i][k] == 0) {
+                        if (check_the_bounds(i, k) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
+                            Expansion.expand(map, 7, i, k);
+                            stack.push(rewriting_map());
+                            flag = true;
+                        }
+                    } if(flag) break;
+                } if(flag) break;
+            }
+            if(is_solved()){
+                return;
+            }
+        }
+
+    }
+
+//    /**
+//     * algoyrthm of BACK_TRACKINGGGGGGGG KING
+//     */
+//    public void back_tracking() {
+//        if (!is_solved()) {
+//            if(searching_field(0)) {  //może jeszcze czy jest 9
+//                int tab[] = find_white_field(); int i = tab[0], k = tab[1];
+//                if (check_the_bounds(i, k) && (map[i][k] == 0) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
+//                    Expansion.expand(map, 7, i, k);
+//                    set_cross_if_black_block_value_equals_number_of_bulbs();
+//                    stack.push(rewriting_map());
+//                    tabOfMoves.push(new int[] {i,k});  //tablica ktora pretrzymuje w którym miejscu żarówka się zmieniła //int temp[] = new int[] {i,k};
+//                    back_tracking();
+//                }
+//                else {
+//                    map[i][k] = 9;
+//                    back_tracking();
+//                }
+//            }
+//            else{
+//                if(stack.empty() || tabOfMoves.empty()) return;  //tutaj jest błąd
+//                int temp[] = new int[2];
+//                while(searching_field(0)) {
+//                    stack.pop();
+//                    map = stack.pop();
+//                    temp = tabOfMoves.pop();
+//                }
+//                map[temp[0]][temp[1]]=9;
+//                back_tracking();
+//            }
+//        }
+//    }
 
     /**
      * maethod that check if all the black fields have equals numbe of ulbs next to it
@@ -235,19 +277,22 @@ public class Solver_v2 {
     /**
      * find the white field and set the tempX and tempY for that field
      */
-    public void find_white_field(){
+    public int[] find_white_field(int[][] map){
         boolean flag = false;
+        int[] temp = new int[2];
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
                 if(map[i][k]==0){
-                    this.tempX=i; this.tempY=k;
+                    temp = new int[]{i, k};
                     flag =true;
                 }
                 if (flag) break;
             }
             if (flag) break;
         }
+        return temp;
     }
+
 
     /**
      * check if the map is solved
@@ -362,17 +407,6 @@ public class Solver_v2 {
     }
 
     public String write() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                sb.append(map[i][k] + " ");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    public String write(int[][] map) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
