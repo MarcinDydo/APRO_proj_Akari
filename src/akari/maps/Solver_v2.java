@@ -26,7 +26,7 @@ public class Solver_v2 {
 
     public static void main(String[] args) throws IOException {
         Solver_v2 s = new Solver_v2();
-        s.read("akari" + ".csv");  //nazwa
+        s.read("maps/test10"+ ".csv");  //nazwa
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
@@ -50,9 +50,20 @@ public class Solver_v2 {
      * metohod that add all possible dirtst moves on stack
      */
     public void add_all_on_stack(){
-        stack.push(rewriting_map());
+       // boolean flag = true;
+        //stack.push(rewriting_map());
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++){
+
+//                int[] rowNbr = new int[]{-1, 0, 1, 0};
+//                int[] colNbr = new int[]{0, 1, 0, -1};
+//                for (int j = 0; j < 4; j++) {
+//                    if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 5) {
+//                        flag = false; break;
+//                    }
+//                }
+
+
                 if(map[i][k]==0){
                     int[][] temp = rewriting_map();
                     Expansion.expand(temp,7,i,k);
@@ -62,23 +73,22 @@ public class Solver_v2 {
         }
     }
 
-
     public void back_tracking(){
         while (!stack.empty()){
-            boolean flag = false;
             map = stack.pop();
             for(int i = 0; i < x; i++) {
                 for (int k = 0; k < y; k++) {
+
                     if (map[i][k] == 0) {
                         if (check_the_bounds(i, k) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
-                            Expansion.expand(map, 7, i, k);
-                            stack.push(rewriting_map());
-                            flag = true;
+                            int[][] temp = rewriting_map();
+                            Expansion.expand(temp,7,i,k);
+                            stack.push(temp);
                         }
-                    } if(flag) break;
-                } if(flag) break;
+                    }
+                }
             }
-            if(is_solved()){
+            if(is_solved(map)){
                 return;
             }
         }
@@ -91,7 +101,7 @@ public class Solver_v2 {
 //    public void back_tracking() {
 //        if (!is_solved()) {
 //            if(searching_field(0)) {  //może jeszcze czy jest 9
-//                int tab[] = find_white_field(); int i = tab[0], k = tab[1];
+//                int tab[] = find_white_field(rewriting_map()); int i = tab[0], k = tab[1];
 //                if (check_the_bounds(i, k) && (map[i][k] == 0) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
 //                    Expansion.expand(map, 7, i, k);
 //                    set_cross_if_black_block_value_equals_number_of_bulbs();
@@ -298,7 +308,7 @@ public class Solver_v2 {
      * check if the map is solved
      * @return
      */
-    public boolean is_solved(){
+    public boolean is_solved(int [][] map){
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
                 if(map[i][k]==0 || map[i][k]==9) return false;
