@@ -6,6 +6,7 @@ import akari.view.Difficulty;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solver_v2 {
@@ -13,15 +14,18 @@ public class Solver_v2 {
     private int[][] map;
     private int x, y;
     private Stack<int[][]> stack;
+    private Stack<int[]> tabOfMoves;
     private Field[][] fields;
+    private int tempX, tempY;
 
     public Solver_v2() {
         this.stack = new Stack<>();
+        this.tabOfMoves = new Stack<>();
     }
 
     public static void main(String[] args) throws IOException {
         Solver_v2 s = new Solver_v2();
-        s.read("maps/test7" + ".csv");
+        s.read("maps/test12" + ".csv");  //nazwa
         System.out.println(s.write());
         s.solve();
         System.out.println("-----------------");
@@ -40,41 +44,59 @@ public class Solver_v2 {
         back_tracking();
     }
 
-
-    /*
-            mehod(i+1,k);
-
-        i odkladac wsztsko na stacku,
-        jeśli nie ma mozliwosci ruhcu to sie cofamy
-        pop ze stacka (na samym koncu if zrobic)
-
-        function BackTrack(C){
-            if (DeadEnd(C)) return;
-            if (Solution(C))
-            Output(C);
-            else
-            foreach (s = next legal moves from C) {
-            BackTrack(s);
-            }
-        }
+    /**
+     * algoyrthm of BACK_TRACKINGGGGGGGG KING
      */
-
-    public boolean back_tracking() {
-        //stack.push(rewriting_map());  //przepisanie mapy, aby nie zpaisywanie referencji ale faktyczna mape
-        if (!searching_field(0)) return true;
-        else
-            for (int i = 0; i < x; i++) {
-                for (int k = 0; k < y; k++) {
-                    if (check_the_bounds(i, k) && map[i][k] == 0 &&
-                            no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i,k)) {
-                        Expansion.expand(map, 7, i, k);
-                        set_cross_if_black_block_value_equals_number_of_bulbs();
-                        stack.push(rewriting_map());
-                    }
+    public void back_tracking() {
+        if (!is_solved()) {
+            if(searching_field(0)) {  //może jeszcze czy jest 9
+                find_white_field(); int i = tempX, k = tempY;
+                if (check_the_bounds(i, k) && (map[i][k] == 0) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
+                    Expansion.expand(map, 7, i, k);
+                    set_cross_if_black_block_value_equals_number_of_bulbs();
+                    stack.push(rewriting_map());
+                    tabOfMoves.push(new int[] {i,k});  //tablica ktora pretrzymuje w którym miejscu żarówka się zmieniła //int temp[] = new int[] {i,k};
+                    back_tracking();
+                }
+                else {
+                    map[i][k] = 9;
+                    stack.push(rewriting_map());
+                    back_tracking();
                 }
             }
+            else{
+                if(stack.empty() || tabOfMoves.empty()) return;
+                stack.pop();
+                map = stack.pop();
+                int temp[] = tabOfMoves.pop();
+                map[temp[0]][temp[1]]=9;
+                stack.push(rewriting_map());
+                back_tracking();
+            }
+        }
+    }
 
-        return false;
+    /**
+     * maethod that check if all the black fields have equals numbe of ulbs next to it
+     * @return if the field have not equal value and number of bulbs return false, in other case return true
+     */
+    public boolean check_all_blacK_field_if_have_equals_number_of_bulbs() {
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
+                    int counter = 0;
+                    int[] rowNbr = new int[]{-1, 0, 1, 0};
+                    int[] colNbr = new int[]{0, 1, 0, -1};
+                    for (int j = 0; j < 4; j++) {
+                        if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 8) {
+                            counter++;
+                        }
+                    }
+                    if(counter != map[i][k]) return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -107,7 +129,6 @@ public class Solver_v2 {
     /**
      * method check if it is possible to set bulb in map[i][k], method check if there is a black fields next to it and
      * if there is a black field check if that field have equals number of bulbs
-     *
      * @param i x cordinate
      * @param k y cordiate
      * @return return true if it is posssible to set bulb and false in other case
@@ -133,38 +154,9 @@ public class Solver_v2 {
         return true;
     }
 
-    //    /**
-//     * set bulbs if the number of dark space equals a quantity od value of the black field
-//     */
-//    public void set_bulbs_next_to_field_if_value_equals_quantity_of_white_space() {
-//        while(if_value_of_fields_not_equals_quantity_of_bulbs_next_to_it()) {
-//            for (int i = 0; i < x; i++) {
-//                for (int k = 0; k < y; k++) {
-//                    if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
-//                        Stack<Field> stack = new Stack();
-//                        int valueOfField = map[i][k];
-//                        int counter = 0;
-//                        int[] rowNbr = new int[]{-1, 0, 1, 0};
-//                        int[] colNbr = new int[]{0, 1, 0, -1};
-//                        for (int j = 0; j < 4; j++) {
-//                            if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) &&
-//                                    (map[i + rowNbr[j]][k + colNbr[j]] == 0 || map[i + rowNbr[j]][k + colNbr[j]] == 8) &&
-//                                    map[i + rowNbr[j]][k + colNbr[j]] != 7) {
-//                                stack.push(new Field(i + rowNbr[j], k + colNbr[j]));
-//                                counter++;
-//                            }
-//                        }
-//                        if (valueOfField == counter) {
-//                            while (!stack.empty()) {
-//                                Field field = stack.pop();
-//                                Expansion.expand(map, 7, field.getxCord(), field.getyCord());
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    /**
+     * create a map of objects
+     */
     public void set_up_map_of_objects() {
         this.fields = new Field[x][y];
         for (int i = 0; i < x; i++) {
@@ -241,6 +233,47 @@ public class Solver_v2 {
     }
 
     /**
+     * find the white field and set the tempX and tempY for that field
+     */
+    public void find_white_field(){
+        boolean flag = false;
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if(map[i][k]==0){
+                    this.tempX=i; this.tempY=k;
+                    flag =true;
+                }
+                if (flag) break;
+            }
+            if (flag) break;
+        }
+    }
+
+    /**
+     * check if the map is solved
+     * @return
+     */
+    public boolean is_solved(){
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if(map[i][k]==0 || map[i][k]==9) return false;
+                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
+                    int counter = 0;
+                    int[] rowNbr = new int[]{-1, 0, 1, 0};
+                    int[] colNbr = new int[]{0, 1, 0, -1};
+                    for (int j = 0; j < 4; j++) {
+                        if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 8) {
+                            counter++;
+                        }
+                    }
+                    if(counter != map[i][k]) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * @param i x cordintate
      * @param k y cordinate
      * @return return true if there is no colision and we can place there a bulb
@@ -280,17 +313,16 @@ public class Solver_v2 {
 
     /**
      * rewtiring map in order to not place on stack reference but a int[][]
-     *
      * @return return map
      */
     public int[][] rewriting_map() {
-        int[][] temp = new int[x][y];
+        int[][] map_ = new int[x][y];
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
-                temp[i][k] = map[i][k];
+                map_[i][k] = map[i][k];
             }
         }
-        return temp;
+        return map_;
     }
 
     /**
