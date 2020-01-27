@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 /**
- * Class to represent One akari.view.Akari Tile.
+ * Class to represent One Akari Tile.
  */
 public class AkariButton extends JButton implements MouseListener {
     public State state;
@@ -18,7 +18,7 @@ public class AkariButton extends JButton implements MouseListener {
 
     /**
      * Constructor for tile.
-     * @param akari akari.view.Akari game that this tile belongs to.
+     * @param akari Akari game that this tile belongs to.
      * @param x X coordinate of this tile in akari game.
      * @param y Y coordinate of this tile in akari game.
      * @param state indicator of state and icon of the tile

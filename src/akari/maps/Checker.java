@@ -5,7 +5,7 @@ import akari.view.AkariButton;
 import akari.view.State;
 
 /**
- * akari.maps.Checker class for akari
+ * Checker class for akari.
  */
 public class Checker {
     private Akari akari;

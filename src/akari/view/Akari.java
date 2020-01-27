@@ -6,9 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class to represent akari.view.Akari game.
+ * Class to represent Akari game.
 */
 public class Akari extends JFrame {
+    public int[][] solution;
     public int sx;
     int sy;
      Difficulty difficulty;
@@ -26,6 +27,7 @@ public class Akari extends JFrame {
         buttons=new AkariButton[sx][sy];
         Generator generator = new Generator(sx,sy);
         int[][] map = generator.getMAP(4);
+        solution = generator.solution;
         setSize(40*sx,40*sy+40);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -47,6 +49,7 @@ public class Akari extends JFrame {
      * Method for swaping akari tiles.
      */
     public void swap(int[][] map){
+        solution = map;
         setVisible(false);
         remove(p);
         sx=map.length;
@@ -59,6 +62,34 @@ public class Akari extends JFrame {
         for(int i=0;i<map.length;i++){
             for(int j=0;j<map[0].length;j++){
                 buttons[i][j] = new AkariButton(this, i,j, State.toState(map[i][j]));
+                p.add(buttons[i][j]);
+            }
+        }
+        repaint();
+        add(p);
+        setVisible(true);
+    }
+
+    /**
+     * Swaping methods for maps with solutions
+     *
+     * @param map map to be swaped.
+     * @param sol solution of the swaped map.
+     */
+    public void swapWS(int[][] map, int[][] sol) {
+        solution = sol;
+        setVisible(false);
+        remove(p);
+        sx = map.length;
+        sy = map[0].length;
+        p = new Panel();
+        setSize(40 * map.length, 40 * map[0].length + 40);
+        p.setLayout(new GridLayout(map.length, map[0].length));
+        p.setPreferredSize(new Dimension(45 * map.length, 45 * map[0].length));
+        buttons = new AkariButton[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                buttons[i][j] = new AkariButton(this, i, j, State.toState(map[i][j]));
                 p.add(buttons[i][j]);
             }
         }
