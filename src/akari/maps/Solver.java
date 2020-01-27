@@ -8,19 +8,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Stack;
 
-public class Solver_v2 {
+class Solver{
 
     private int[][] map;
     private int x, y;
     private Stack<int[][]> stack;
     private Field[][] fields;
 
-    public Solver_v2() {
+    public Solver() {
         this.stack = new Stack<>();
     }
 
     public static void main(String[] args) throws IOException {
-        Solver_v2 s = new Solver_v2();
+        Solver s = new Solver();
         s.read("maps/test16"+ ".csv");
         s.solve();
         Akari a = new Akari(Difficulty.Easy);
@@ -34,11 +34,7 @@ public class Solver_v2 {
         set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0);
         set_cross_if_black_block_value_equals_number_of_bulbs();
         place_all_first_poossible_bulbs_on_stack();
-        double start = System.currentTimeMillis();
-        double finish = System.currentTimeMillis();
         back_tracking();
-        double timeElapsed = finish - start;
-        System.out.println(timeElapsed);
     }
 
     /**
