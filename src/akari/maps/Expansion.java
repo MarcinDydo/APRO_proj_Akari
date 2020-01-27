@@ -19,7 +19,7 @@ public class Expansion {
      * @param y coordinate in map
      */
     private static void expandDown(int state, int x, int y) {
-        if (x + 1 < MAP.length && (MAP[x+1][y]==0|| MAP[x+1][y]==7 )) {
+        if (x + 1 < MAP.length && (MAP[x+1][y]==0|| MAP[x+1][y]==7 || MAP[x+1][y]==9)) {
             MAP[x+1][y] = state;
             expandDown(state,x+1,y);
         }
@@ -32,7 +32,7 @@ public class Expansion {
      * @param y coordinate in map
      */
     private static void expandUp(int state, int x, int y){
-        if (x -1 > -1 && (MAP[x-1][y]==0 || MAP[x-1][y]==7)) {
+        if (x -1 > -1 && (MAP[x-1][y]==0 || MAP[x-1][y]==7 || MAP[x-1][y]==9)) {
             MAP[x-1][y]= state;
             expandUp(state, x-1,y);
         }
@@ -45,7 +45,7 @@ public class Expansion {
      * @param y coordinate in map
      */
     private static void expandRight(int state, int x, int y) {
-        if (y+1 <  MAP[0].length  && (MAP[x][y+1]==0|| MAP[x][y+1]==7)) {
+        if (y+1 <  MAP[0].length  && (MAP[x][y+1]==0|| MAP[x][y+1]==7 || MAP[x][y+1]==9 )) {
             MAP[x][y+1]= state;
             expandRight(state,x,y+1);
         }
@@ -58,7 +58,7 @@ public class Expansion {
      * @param y coordinate in map
      */
     private static void expandLeft(int state, int x, int y) {
-        if (y-1 > -1 && (MAP[x][y-1]==0|| MAP[x][y-1]==7 )) {
+        if (y-1 > -1 && (MAP[x][y-1]==0|| MAP[x][y-1]==7 || MAP[x][y-1]==9)) {
             MAP[x][y-1]= state;
             expandLeft(state,x,y-1);
         }

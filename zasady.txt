@@ -7,5 +7,4 @@
     6- Black
     7- Lit
     8- bulb
-
-1.we wsyztskich 0 stawiamy od razu że to LIT czyli
+    9- cross

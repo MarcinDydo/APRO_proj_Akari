@@ -11,7 +11,7 @@ import java.awt.*;
 public class Akari extends JFrame {
     public int[][] solution;
     public int sx;
-    int sy;
+    public int sy;
      Difficulty difficulty;
     public AkariButton[][] buttons;
      static Panel p = new Panel();static int ratio = 3;
