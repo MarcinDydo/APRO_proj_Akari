@@ -17,7 +17,7 @@ public class Loader {
     /**
      *
      * @param filename Path to file.
-     * @param a akari.view.Akari game throwing load.
+     * @param a Akari game throwing load.
      * @throws IOException No file found or file obstructed.
      */
     public Loader(String filename, Akari a) throws IOException{
