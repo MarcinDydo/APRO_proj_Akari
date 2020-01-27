@@ -9,530 +9,295 @@ import java.io.IOException;
 import java.util.Stack;
 
 public class Solver {
-    private Akari akari;
+
     private int[][] map;
     private int x, y;
     private Stack<int[][]> stack;
+    private Field[][] fields;
+
+    public Solver() {
+        this.stack = new Stack<>();
+    }
 
     public static void main(String[] args) throws IOException {
-        //Solver s = new Solver(new Akari(Difficulty.Easy));
         Solver s = new Solver();
-        s.read("akari.csv");
-        System.out.println(s.write());
+        s.read("maps/test16"+ ".csv");
         s.solve();
-        System.out.println("-----------------");
-        System.out.println(s.write());
         Akari a = new Akari(Difficulty.Easy);
-//        s.akari.swap(s.map);
         a.swap(s.map);
     }
 
-    // ****** TUTAJ W KOMENTARZU PRZY PARAM jest // ABY NIE WYWALO BLEDU JA NA RAZIE ******
-
-    /**
-     * this constructor is to get a two dimensional table: int [][] map
-     * //@param akari class form where i get map[][]
-     */
-//    akari.maps.Solver(akari.view.Akari akari){
-//        this.akari = akari;
-//        this.map = new int[akari.sx][akari.sy];
-//        for(int i=0;i<akari.sx;i++){
-//            for(int j=0;j<akari.sy;j++){
-//                if(akari.buttons[i][j].state.getValue()<9 && akari.buttons[i][j].state.getValue()>-1) map[i][j]=akari.buttons[i][j].state.getValue();
-//            }
-//        }
-//    }
-    public void solve() {
-        adding_LIT_next_to_0(); //działa
-        placing_bulbs_next_to_4(); //działa
-        searching_3_on_the_walls(); //działą
-        searching_2_in_corners();  //działa ale jest niepotrzebna bo jest searching_field...
-        searching_field_with_equals_numer_of_free_space();  // działą
-        System.out.println("-------- Działąjąca część -----------");
-        System.out.println(write());
-
-        //back_tracking();
-
+    private void solve() {
+        set_up_map_of_objects();
+        set_coross_next_to_0();
+        set_bulbs_next_to_4();
+        set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0);
+        set_cross_if_black_block_value_equals_number_of_bulbs();
+        place_all_first_poossible_bulbs_on_stack();
+        back_tracking();
+        //removing_lit_and_cross();
     }
 
-    public void back_tracking(){
-        int flag = 0;
-//        Stack<int[][]> staczek = new Stack<>();
-//        staczek.push(map); //dodanie may na sam poczatek aby było gdzie wrócic na sam poczatek
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 0 && no_collision(i, k) && black_fields_in_4_sides_equals_number_of_bulbs(i,k)) {
-                    Expansion.expand(map,7,i,k);
-                    flag = 1;
-                    //staczek.push(map);
-                    //if (is_on_map_white_field()) back_tracking();
+    private void removing_lit_and_cross(){
+        for(int i = 0; i < x; i++){
+            for(int k = 0; k < y; k++) {
+                if( map[i][k] == 7 || map[i][k] == 9) map[i][k]=0;
+            }
+        }
+    }
+
+    /**
+     * Method place on stack all possible first moves in order to let work a backtracking method
+     */
+    private void place_all_first_poossible_bulbs_on_stack(){
+        for(int i = 0; i < x; i++){
+            for(int k = 0; k < y; k++){
+                if(map[i][k]==0){
+                    int[][] temp = rewriting_map();
+                    Expansion.expand(temp,7,i,k);
+                    stack.push(temp);
                 }
             }
         }
-        System.out.println(flag);
+    }
+
+    private void back_tracking(){
+        while (!stack.empty()){
+            map = stack.pop();
+            for(int i = 0; i < x; i++) {
+                for (int k = 0; k < y; k++) {
+                    if (map[i][k] == 0) {
+                        if (check_the_bounds(i, k) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
+                            int[][] temp = rewriting_map();
+                            Expansion.expand(temp,7,i,k);
+                            stack.push(temp);
+                        }
+                    }
+                }
+            }
+            if(is_solved(map)){
+                return;
+            }
+        }
     }
 
     /**
-     * sprawdza czy w 4 strony jet odpowiednia ilosc zarowek
-     * @param i  parametr x dla zaroweki
-     * @param k paramtery y dla zarowki
-     * @return gdy jest za duzo sasiadow to zwraca false, gdy est za malo zarowek to stawia true
+     * method set cross on dark fields next to black field if the black field have next to it equals number of bulbs
      */
-    public boolean  black_fields_in_4_sides_equals_number_of_bulbs(int i, int k){
-        i = i -1;
-        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
-                    /*
-                    gdy jest za duzo sasiadow to zwraca false
-                    gdy est za malo zarowek to stawia true
-                     */
-            int valueOfField = map[i][k];
-            int counter = 0;
-            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
-                counter++;
+    private void set_cross_if_black_block_value_equals_number_of_bulbs() {
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
+                    int counter = 0;
+                    int[] rowNbr = new int[]{-1, 0, 1, 0};
+                    int[] colNbr = new int[]{0, 1, 0, -1};
+                    for (int j = 0; j < 4; j++) {
+                        if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 8) {
+                            counter++;
+                        }
+                    }
+                    for (int j = 0; j < 4; j++) {
+                        if (counter == map[i][k]) {
+                            if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 0)
+                                map[i + rowNbr[j]][k + colNbr[j]] = 9;
+                        }
+                    }
+                }
             }
-            if (k + 1 < y && map[i][k + 1] == 8) {
-                counter++;
-            }
-            if (i + 1 < x && map[i + 1][k] == 8 ) {
-
-                counter++;
-            }
-            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
-                counter++;
-            }
-            if (valueOfField > counter) {
-                return  true;
-            }
-            if(valueOfField < counter){
-                return false;
-            }
-            if(valueOfField == counter) System.out.println("rowna ilosc");
         }
-        i = i+1; k = k+1;
-        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
-                    /*
-                    gdy jest za duzo sasiadow to zwraca false
-                    gdy est za malo zarowek to stawia true
-                     */
-            int valueOfField = map[i][k];
-            int counter = 0;
-            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
-                counter++;
-            }
-            if (k + 1 < y && map[i][k + 1] == 8) {
-                counter++;
-            }
-            if (i + 1 < x && map[i + 1][k] == 8 ) {
+    }
 
-                counter++;
+    /**
+     * method check if it is possible to set bulb in map[i][k], method check if there is a black fields next to it and
+     * if there is a black field check if that field have equals number of bulbs
+     * @param i x cordinate
+     * @param k y cordiate
+     * @return return true if it is posssible to set bulb and false in other case
+     */
+    private boolean if_value_of_fields_equals_quantity_of_bulbs_next_to_it(int i, int k) {
+        int[] rowNbr = new int[]{-1, 0, 1, 0};
+        int[] colNbr = new int[]{0, 1, 0, -1};
+        int counter = 0;
+        for (int j = 0; j < 4; j++) {
+            int temp_i = i + rowNbr[j];
+            int temp_k = k + colNbr[j];
+            if (check_the_bounds(temp_i,temp_k) && (map[temp_i][temp_k] == 1 || map[temp_i][temp_k] == 2 || map[temp_i][temp_k] == 3)) {
+                for (int p = 0; p < 4; p++) {
+                    int temp_i_2 = i + rowNbr[j] + rowNbr[p];
+                    int temp_k_2 = k + colNbr[j] + colNbr[p];
+                    if (check_the_bounds(temp_i_2, temp_k_2) && map[temp_i_2][temp_k_2] == 8) {
+                        counter++;
+                    }
+                }
+                if (counter == map[i + rowNbr[j]][k + colNbr[j]]) return false;
             }
-            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
-                counter++;
-            }
-            if (valueOfField > counter) {
-                return  true;
-
-            }
-            if(valueOfField < counter){
-                return false;
-            }
-            if(valueOfField == counter) System.out.println("rowna ilosc");
-        }
-        i = i+1; k = k-1;
-        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
-                    /*
-                    gdy jest za duzo sasiadow to zwraca false
-                    gdy est za malo zarowek to stawia true
-                     */
-            int valueOfField = map[i][k];
-            int counter = 0;
-            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
-                counter++;
-            }
-            if (k + 1 < y && map[i][k + 1] == 8) {
-                counter++;
-            }
-            if (i + 1 < x && map[i + 1][k] == 8 ) {
-
-                counter++;
-            }
-            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
-                counter++;
-            }
-            if (valueOfField > counter) {
-                return  true;
-
-            }
-            if(valueOfField < counter){
-                return false;
-            }
-            if(valueOfField == counter) System.out.println("rowna ilosc");
-        }
-        i = i-1; k = k-1;
-        if( chceck_if_i_and_k_is_correct(i,k) && (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3)){
-                    /*
-                    gdy jest za duzo sasiadow to zwraca false
-                    gdy est za malo zarowek to stawia true
-                     */
-            int valueOfField = map[i][k];
-            int counter = 0;
-            if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
-                counter++;
-            }
-            if (k + 1 < y && map[i][k + 1] == 8) {
-                counter++;
-            }
-            if (i + 1 < x && map[i + 1][k] == 8 ) {
-
-                counter++;
-            }
-            if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
-                counter++;
-            }
-            if (valueOfField > counter) {
-                return  true;
-
-            }
-            if(valueOfField < counter){
-                return false;
-            }
-            if(valueOfField == counter) System.out.println("rowna ilosc");
         }
         return true;
     }
 
     /**
-     *
-     * @param i x cordinate
-     * @param k y cordinate
-     * @return return true if i and k isn`t out of band
+     * create a map of objects
      */
-    public boolean chceck_if_i_and_k_is_correct(int i, int k){
-        if(i >=0 && i < x && k >=0 && k < y) return true;
-        return false;
+    private void set_up_map_of_objects() {
+        this.fields = new Field[x][y];
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) fields[i][k] = new Field(i, k);
+        }
     }
 
     /**
-     * szukam sobie jakiegos czarnego pola, od 1 do 3 i sprawdzam czy wokół niego jest opcja wstawienia żąrówki
+     * recursion taht set bulbs if the number of dark space equals a quantity od value of the black field
+     */
+    private void set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(int i, int k) {
+        if (!(map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) || fields[i][k].isVisited()) {
+            if (k + 1 == y) {
+                if (i + 1 != x) set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i + 1, 0);
+            } else set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i, k + 1);
+        } else {
+            Stack<Field> stack = new Stack();
+            int counter = 0;
+            int[] rowNbr = new int[]{-1, 0, 1, 0};
+            int[] colNbr = new int[]{0, 1, 0, -1};
+            for (int j = 0; j < 4; j++) {
+                if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) &&
+                        (map[i + rowNbr[j]][k + colNbr[j]] == 0 || map[i + rowNbr[j]][k + colNbr[j]] == 8)) {
+                    stack.push(new Field(i + rowNbr[j], k + colNbr[j]));
+                    counter++;
+                }
+            }
+            if (counter == map[i][k]) {
+                fields[i][k].setVisited(true);
+                while (!stack.empty()) {
+                    Field field = stack.pop();
+                    Expansion.expand(map, 7, field.getxCord(), field.getyCord());
+                }
+                set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0);
+            }
+            //recursion
+            if (k + 1 == y) {
+                if (i + 1 != x) set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i + 1, 0);
+            } else set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i, k + 1);
+
+        }
+    }
+
+    /**
+     * method that set bulbs next to parameterized black field with 4 number
+     */
+    private void set_bulbs_next_to_4() {
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if (map[i][k] == 4) {
+                    if (check_the_bounds(i - 1, k) && map[i - 1][k] == 0) Expansion.expand(map, 7, i - 1, k);
+                    if (check_the_bounds(i, k + 1) && map[i][k + 1] == 0) Expansion.expand(map, 7, i, k + 1);
+                    if (check_the_bounds(i + 1, k) && map[i + 1][k] == 0) Expansion.expand(map, 7, i + 1, k);
+                    if (check_the_bounds(i, k - 1) && map[i][k - 1] == 0) Expansion.expand(map, 7, i, k - 1);
+                }
+            }
+        }
+    }
+
+    /**
+     * method that set cross next to 0 fields in order to forbid place bulb there
+     */
+    private void set_coross_next_to_0() {
+        for (int i = 0; i < x; i++) {
+            for (int k = 0; k < y; k++) {
+                if (map[i][k] == 5) {
+                    if (check_the_bounds(i, k + 1) && map[i][k + 1] == 0) map[i][k + 1] = 9;
+                    if (check_the_bounds(i + 1, k) && map[i + 1][k] == 0) map[i + 1][k] = 9;
+                    if (check_the_bounds(i, k - 1) && map[i][k - 1] == 0) map[i][k - 1] = 9;
+                    if (check_the_bounds(i - 1, k) && map[i - 1][k] == 0) map[i - 1][k] = 9;
+                }
+            }
+        }
+    }
+
+    /**
+     * find the white field and set the tempX and tempY for that field
+     */
+
+    /**
+     * check if the map is solved
      * @return
      */
-    public boolean  all_black_equal_number_of_bulbs(){
+    private boolean is_solved(int[][] map){
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
-                if(map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3){
-                    /*
-                    //szukam po sasiadach cy ma taka sama ilosc sasiwadow, jesli ma odpowiednioa ilosc sasiady to zwraca true
-                    // jeśli nie ma idpowiedniej ilosci sasiadow zwraa flase
-                    // robi to w przypadchch gdy jest za duzo albo za mało
-
-                    gdy jest za duzo sasiadow to zwraca false
-                    gdy est za malo zarowek to stawia true
-                     */
-                    class Field {
-                        public int getxCord() {
-                            return xCord;
-                        }
-
-                        public int getyCord() {
-                            return yCord;
-                        }
-
-                        private int xCord;
-                        private int yCord;
-
-                        public Field(int xCord, int yCord) {
-                            this.xCord = xCord;
-                            this.yCord = yCord;
-                        }
-                    }
-                    int valueOfField = map[i][k];
+                if(map[i][k]==0 || map[i][k]==9) return false;
+                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
                     int counter = 0;
-                    if (i - 1 >= 0 &&  map[i - 1][k] == 8) {
-                        counter++;
+                    int[] rowNbr = new int[]{-1, 0, 1, 0};
+                    int[] colNbr = new int[]{0, 1, 0, -1};
+                    for (int j = 0; j < 4; j++) {
+                        if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 8) {
+                            counter++;
+                        }
                     }
-                    if (k + 1 < y && map[i][k + 1] == 8) {
-                        counter++;
-                    }
-                    if (i + 1 < x && map[i + 1][k] == 8 ) {
-
-                        counter++;
-                    }
-                    if (k - 1 >= 0 &&  map[i][k - 1] == 8) {
-                        counter++;
-                    }
-                    if (valueOfField > counter) {
-                        return  true;
-
-                    }
-                    if(valueOfField < counter){
-                        return false;
-                    }
-                    if(valueOfField == counter) System.out.println("rowna ilosc");
+                    if(counter != map[i][k]) return false;
                 }
             }
         }
         return true;
     }
 
-
-
     /**
-     * mam mape nie odyfikwoana przez ta ostatnia metode
-     * wrzucam na stosik
-     *
-     *
-     * sprawdzam czy moge wstawić żarówke według zasad ktore s apowyzej, i wrzucam na stos, jeśli coś później pójdzie
-     * nie tak to stack.pop() aby wywalić ten błąd i elo
-     *
-     */
-
-    public boolean is_on_map_white_field() {
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 0) return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * @return return true if the map is solved and false if the map isnt solved
-     */
-    public boolean is_solved() {
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 0) {
-                    return false;
-                }
-                if (map[i][k] == 8) {
-                    if (!no_collision(i, k)) return false;
-                }
-                /**
-                 * dodać jeszcze warunek spr czy dla wsyztskich blookow z numerami zgadza sie liczba zarowek
-                 */
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param i x cordinate
-     * @param k y  cordinate
-     * @return return true if the map[i][k] is a black , and false in other case
-     */
-    public boolean is_black_block(int i, int k) {
-        return map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3 || map[i][k] == 4 || map[i][k] == 5 || map[i][k] == 6;
-    }
-
-    /**
+     * Method check if it is possible to set bulb in field with cords i,k. If on the expansion of the bulb appear bulb
+     * return false, or if on the expansion of the light appear black block, method check others requirement
      * @param i x cordintate
      * @param k y cordinate
      * @return return true if there is no colision and we can place there a bulb
      */
-    public boolean no_collision(int i, int k) {
-        //sprawdzenie w prawą stornę
-        for (int j = 1; j < y - k; j++) {  //jak j< k....
-            if (k + j < y && is_black_block(i, k + j)) {
-                break;
-            }
-            if (k + j < y && map[i][k + j] == 8) {
-                return false;
-            }
-        }
-        //sprawdzenie dla lewą stronę
+    private boolean no_collision(int i, int k) {
         for (int j = 1; j < y - k; j++) {
-            if (k - j > 0 && is_black_block(i, k - j)) {
-                break;
-            }
-            if (k - j > 0 && map[i][k - j] == 8) {
-                return false;
-            }
+            if (check_the_bounds(i, k + j) && is_black_block(i, k + j)) break;
+            if (check_the_bounds(i, k + j) && map[i][k + j] == 8) return false;
         }
-        //sprawdzenie do góry
-        for (int j = 1; j < x - i; j++) {
-            if (i - j > 0 && is_black_block(i - j, k)) {
-                break;
-            }
-            if (i - j > 0 && map[i - j][k] == 8) {
-                return false;
-            }
+        for (int j = 1; j < y - k; j++) {
+            if (check_the_bounds(i, k - j) && is_black_block(i, k - j)) break;
+            if (check_the_bounds(i, k - j) && map[i][k - j] == 8) return false;
         }
-        //sprawdzenie do dołu
         for (int j = 1; j < x - i; j++) {
-            if (i + j < x && is_black_block(i + j, k)) {
-                break;
-            }
-            if (i + j < x && map[i + j][k] == 8) {
-                return false;
-            }
+            if (check_the_bounds(i - j, k) && is_black_block(i - j, k)) break;
+            if (check_the_bounds(i - j, k) && map[i - j][k] == 8) return false;
+        }
+        for (int j = 1; j < x - i; j++) {
+            if (check_the_bounds(i + j, k) && is_black_block(i + j, k)) break;
+            if (check_the_bounds(i + j, k) && map[i + j][k] == 8) return false;
         }
         return true;
     }
 
     /**
-     * searching block 3 on the walls, and then placeing the bulbs next to it and expanding the bulb
+     * Rewtiring map in order to not place on stack reference but a int[][]
+     * @return return map
      */
-    public void searching_3_on_the_walls() {
+    private int[][] rewriting_map() {
+        int[][] map_temp = new int[x][y];
         for (int i = 0; i < x; i++) {
-            /**
-             * sprawdza najpierw lewą ścianę
-             */
-            if (map[i][0] == 3) {
-                if (i + 1 < x) Expansion.expand(map, 7, i + 1, 0);
-                if (i - 1 > 0) Expansion.expand(map, 7, i - 1, 0);
-                Expansion.expand(map, 7, i, 1);
-            }
-            /**
-             * sprawdza prawą ścianę
-             */
-            if (map[i][y - 1] == 3) {
-                if (i - 1 > 0) Expansion.expand(map, 7, i - 1, y - 1);
-                if (i + 1 < x) Expansion.expand(map, 7, i + 1, y - 1);
-                Expansion.expand(map, 7, i, y - 2);
-            }
+            if (y >= 0) System.arraycopy(map[i], 0, map_temp[i], 0, y);
         }
-
-        for (int i = 0; i < y; i++) {
-            /**
-             * sprawdzanie górna ściana
-             */
-            if (map[0][i] == 3) {
-                if (i - 1 > 0) Expansion.expand(map, 7, 0, i - 1);
-                if (i + 1 < y) Expansion.expand(map, 7, 0, i + 1);
-                Expansion.expand(map, 7, 1, i);
-            }
-            /**
-             * sprawdzana dolna ściana
-             */
-            if (map[x - 1][i] == 3) {
-                if (i - 1 > 0) Expansion.expand(map, 7, x - 1, i - 1);
-                if (i + 1 < y) Expansion.expand(map, 7, x - 1, i + 1);
-                Expansion.expand(map, 7, x - 2, i);
-            }
-        }
-    }
-
-    public void searching_field_with_equals_numer_of_free_space() {
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
-                    class Field {
-                        public int getxCord() {
-                            return xCord;
-                        }
-
-                        public int getyCord() {
-                            return yCord;
-                        }
-
-                        private int xCord;
-                        private int yCord;
-
-                        public Field(int xCord, int yCord) {
-                            this.xCord = xCord;
-                            this.yCord = yCord;
-                        }
-                    }
-                    Stack<Field> stack = new Stack();
-                    int valueOfField = map[i][k];
-                    int counter = 0;
-                    if (i - 1 >= 0 && (map[i - 1][k] == 0 || map[i - 1][k] == 8) && map[i - 1][k] != 7) {
-                        stack.push(new Field(i - 1, k));
-                        counter++;
-                    }
-                    if (k + 1 < y && (map[i][k + 1] == 0 || map[i][k + 1] == 8) && map[i][k + 1] != 7) {
-                        stack.push(new Field(i, k + 1));
-                        counter++;
-                    }
-                    if (i + 1 < x && (map[i + 1][k] == 0 || map[i + 1][k] == 8) && map[i + 1][k] != 7) {
-                        stack.push(new Field(i + 1, k));
-                        counter++;
-                    }
-                    if (k - 1 >= 0 && (map[i][k - 1] == 0 || map[i][k - 1] == 8) && map[i][k - 1] != 7) {
-                        stack.push(new Field(i, k - 1));
-                        counter++;
-                    }
-                    if (valueOfField == counter) {
-                        while (!stack.empty()) {
-                            Field field = stack.pop();
-                            Expansion.expand(map, 7, field.xCord, field.yCord);
-                        }
-                    }
-                }
-            }
-        }
+        return map_temp;
     }
 
     /**
-     * method search if in the corner there is a 2, and then set a bulb next to 2.
+     * Method check whether the field is black or not.
+     * @param i x cordinate
+     * @param k y cordinate
+     * @return true if the block is black and false other case
      */
-    public void searching_2_in_corners() {
-        int tempY = y;
-        if (map[0][0] == 2) {
-            Expansion.expand(map, 7, 1, 0);
-            Expansion.expand(map, 7, 0, 1);
-        }
-        if (map[0][y - 1] == 2) {
-            Expansion.expand(map, 7, 1, y - 1);
-            Expansion.expand(map, 7, 0, y - 2);
-        }
-        if (map[x - 1][0] == 2) {
-            Expansion.expand(map, 7, x - 2, 0);
-            Expansion.expand(map, 7, x - 1, 1);
-        }
-        if (map[x - 1][y - 1] == 2) {
-            Expansion.expand(map, 7, x - 2, y - 1);
-            Expansion.expand(map, 7, x - 1, y - 2);
-        }
+    private boolean is_black_block(int i, int k) {
+        return map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3 || map[i][k] == 4 || map[i][k] == 5 || map[i][k] == 6;
     }
 
     /**
-     * no co robi, stawia zarowki am gszie jest 4
+     * Method check if the i and k is not greater or lower nad a x and y.
+     * @param i x cordinate
+     * @param k y cordinate
+     * @return return true if i and k isn`t out of band
      */
-    public void placing_bulbs_next_to_4() {
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 4) {
-                    if (i - 1 > 0 && map[i - 1][k] == 0) {
-                        Expansion.expand(map, 7, i - 1, k);
-                    }
-                    if (k + 1 < y && map[i][k + 1] == 0) {
-                        Expansion.expand(map, 7, i, k + 1);
-                    }
-                    if (i + 1 < x && map[i + 1][k] == 0) {
-                        Expansion.expand(map, 7, i + 1, k);
-                    }
-                    if (k - 1 > 0 && map[i][k - 1] == 0) {
-                        Expansion.expand(map, 7, i, k - 1);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * finding 0 and placing LIT-s next to 0
-     */
-    public void adding_LIT_next_to_0() {
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                if (map[i][k] == 5) {
-                    if (k + 1 < y && map[i][k + 1] == 0) {
-                        map[i][k + 1] = 7;
-                    }
-                    if (i + 1 < x && map[i + 1][k] == 0) {
-                        map[i + 1][k] = 7;
-                    }
-                    if (k - 1 > 0 && map[i][k - 1] == 0) {
-                        map[i][k - 1] = 7;
-                    }
-                    if (i - 1 > 0 && map[i - 1][k] == 0) {
-                        map[i - 1][k] = 7;
-                    }
-                }
-            }
-        }
+    private boolean check_the_bounds(int i, int k) {
+        return i >= 0 && i < x && k >= 0 && k < y;
     }
 
     private void read(String fileName) throws IOException {
@@ -551,16 +316,5 @@ public class Solver {
         }
         br.close();
         this.map = map;
-    }
-
-    public String write() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < x; i++) {
-            for (int k = 0; k < y; k++) {
-                sb.append(map[i][k] + " ");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
     }
 }
