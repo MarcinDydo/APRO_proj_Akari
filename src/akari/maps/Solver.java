@@ -20,7 +20,10 @@ public class Solver {
     }
 
     public Solver(Akari akari) {
+        this.stack = new Stack<>();
         this.akari = akari;
+        x = akari.sx;
+        y = akari.sy;
         this.map = new int[akari.sx][akari.sy];
         for(int i=0;i<akari.sx;i++){
             for(int j=0;j<akari.sy;j++){
