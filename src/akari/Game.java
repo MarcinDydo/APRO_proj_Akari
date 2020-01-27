@@ -12,6 +12,5 @@ public class Game extends Akari {
 
     public static void main(String[] args){
         new Game(Difficulty.Medium);
-
     }
 }

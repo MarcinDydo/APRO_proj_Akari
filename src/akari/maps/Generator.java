@@ -7,6 +7,12 @@ public class Generator {
     public int[][] solution; //cannot point to any other array
     private Random rand = new Random(); //useful random object :)
 
+    /**
+     * Method to get new map
+     *
+     * @param ratio ratio of whites to blacks.
+     * @return Generator map
+     */
     public int[][] getMAP(int ratio) {
         makeMap(ratio);
         return MAP;

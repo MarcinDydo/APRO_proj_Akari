@@ -98,13 +98,6 @@ class AkariMenuBar extends JMenuBar {
             }
         });
         file.add(save);
-        JMenuItem Import = new JMenuItem(new AbstractAction("Import into PNG") {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("click3");
-            }
-
-    });
         JMenuItem veryEasy = new JMenuItem(new AbstractAction("Very Easy") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -156,12 +149,10 @@ class AkariMenuBar extends JMenuBar {
         difficulty.add(Medium);
         difficulty.add(Hard);
         difficulty.add(veryHard);
-        file.add(Import);
         file.add(generate);
         game.add(Solve);
         game.add(check);
-
-        add(Help);
+        game.add(Help);
 
 
     }

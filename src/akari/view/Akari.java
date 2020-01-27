@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class to represent akari.view.Akari game.
+ * Class to represent Akari game.
 */
 public class Akari extends JFrame {
     public int[][] solution;
@@ -70,6 +70,12 @@ public class Akari extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Swaping methods for maps with solutions
+     *
+     * @param map map to be swaped.
+     * @param sol solution of the swaped map.
+     */
     public void swapWS(int[][] map, int[][] sol) {
         solution = sol;
         setVisible(false);
