@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class Generator {
     private final int[][] MAP; //cannot point to any other array
+    public int[][] solution; //cannot point to any other array
     private Random rand = new Random(); //useful random object :)
 
     public int[][] getMAP(int ratio) {
@@ -18,6 +19,7 @@ public class Generator {
      */
     public Generator(int x, int y) {
         MAP = new int[x][y];
+        solution = new int[x][y];
     }
 
     /**
@@ -37,6 +39,11 @@ public class Generator {
             for (int j = 0; j < MAP[0].length; j++) {
                 if(MAP[i][j]==6)
                 MAP[i][j] = assignNumber(8,i,j); //seek for bulbs
+            }
+        }
+        for (int i = 0; i < MAP.length; i++) {
+            for (int j = 0; j < MAP[0].length; j++) {
+                solution[i][j] = MAP[i][j];
             }
         }
         for (int i = 0; i < MAP.length; i++) {

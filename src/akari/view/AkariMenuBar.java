@@ -25,7 +25,7 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 JOptionPane.showMessageDialog(Akari.p,
-                        "akari.view.Akari is a logic puzzle with simple rules and challenging solutions.\n" +
+                        "Akari is a logic puzzle with simple rules and challenging solutions.\n" +
                                 "\n" +
                                 "The rules are simple.Light Up is played on a rectangular grid.\n The grid has both black cells and white cells in it.\n The objective is to place light bulbs on the grid so that every white square is lit. \nA cell is illuminated by a light bulb if they're in the same row or column. \n Also, no light bulb may illuminate another light bulb.\n" +
                                 "Some of the black cells have numbers in them.\n A number in a black cell indicates how many light bulbs share an edge with that cell.\n" +
@@ -36,12 +36,14 @@ class AkariMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
-                akari.swap(generator.getMAP(Akari.ratio));
+                akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
             }
         });
         JMenu file = new JMenu("File");
-        JMenu difficulty = new JMenu("Change Difficulty");
+        JMenu game = new JMenu("Game");
+        JMenu difficulty = new JMenu("Difficulty");
         this.add(file);
+        add(game);
         this.add(difficulty);
         JMenuItem check = new JMenuItem(new AbstractAction("Check") {
             @Override
@@ -65,14 +67,13 @@ class AkariMenuBar extends JMenuBar {
                         csvFile.saveToCSV(savePath);
                     } else if(n==0){
                         Generator generator = new Generator(akari.sx,akari.sy);
-                        akari.swap(generator.getMAP(4));
+                        akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
                     }
                 }
                 else JOptionPane.showMessageDialog(Akari.p,
                         "Solution is incorrect");
             }
         });
-        this.add(check);
         JMenuItem load = new JMenuItem(new AbstractAction("Load from CSV") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -109,7 +110,7 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 akari.difficulty = Difficulty.veryEasy;
                 Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
-                akari.swap(generator.getMAP(Akari.ratio));
+                akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
             }
         });
         JMenuItem Easy = new JMenuItem(new AbstractAction("Easy") {
@@ -117,7 +118,7 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 akari.difficulty = Difficulty.Easy;
                 Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
-                akari.swap(generator.getMAP(Akari.ratio));
+                akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
             }
         });
         JMenuItem Medium = new JMenuItem(new AbstractAction("Medium") {
@@ -125,7 +126,7 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 akari.difficulty = Difficulty.Medium;
                 Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
-                akari.swap(generator.getMAP(Akari.ratio));
+                akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
             }
         });
         JMenuItem Hard = new JMenuItem(new AbstractAction("Hard") {
@@ -133,7 +134,7 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 akari.difficulty = Difficulty.Hard;
                 Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
-                akari.swap(generator.getMAP(Akari.ratio));
+                akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
             }
         });
         JMenuItem veryHard = new JMenuItem(new AbstractAction("Very Hard") {
@@ -141,10 +142,15 @@ class AkariMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent actionEvent) {
                 akari.difficulty = Difficulty.veryHard;
                 Generator generator = new Generator(akari.difficulty.getSize(),akari.difficulty.getSize());
-                akari.swap(generator.getMAP(Akari.ratio));
+                akari.swapWS(generator.getMAP(Akari.ratio), generator.solution);
             }
         });
-
+        JMenuItem Solve = new JMenuItem(new AbstractAction("Solve") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                akari.swap(akari.solution);
+            }
+        });
         difficulty.add(veryEasy);
         difficulty.add(Easy);
         difficulty.add(Medium);
@@ -152,7 +158,11 @@ class AkariMenuBar extends JMenuBar {
         difficulty.add(veryHard);
         file.add(Import);
         file.add(generate);
+        game.add(Solve);
+        game.add(check);
+
         add(Help);
+
 
     }
 
