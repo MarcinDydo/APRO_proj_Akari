@@ -1,8 +1,6 @@
 package akari.maps;
 
 import akari.view.Akari;
-import akari.view.Difficulty;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,6 +8,7 @@ import java.util.Stack;
 
 public class Solver {
 
+    private Akari akari;
     private int[][] map;
     private int x, y;
     private Stack<int[][]> stack;
@@ -19,13 +18,16 @@ public class Solver {
         this.stack = new Stack<>();
     }
 
-    public static void main(String[] args) throws IOException {
-        Solver s = new Solver();
-        s.read("maps/test16"+ ".csv");
-        s.solve();
-        Akari a = new Akari(Difficulty.Easy);
-        a.swap(s.map);
+    Solver(Akari akari){
+        this.akari = akari;
+        this.map = new int[akari.sx][akari.sy];
+        for(int i=0;i<akari.sx;i++){
+            for(int j=0;j<akari.sy;j++){
+                if(akari.buttons[i][j].state.getValue()<9 && akari.buttons[i][j].state.getValue()>-1) map[i][j]=akari.buttons[i][j].state.getValue();
+            }
+        }
     }
+
 
     private void solve() {
         set_up_map_of_objects();
@@ -35,7 +37,7 @@ public class Solver {
         set_cross_if_black_block_value_equals_number_of_bulbs();
         place_all_first_poossible_bulbs_on_stack();
         back_tracking();
-        //removing_lit_and_cross();
+        removing_lit_and_cross();
     }
 
     private void removing_lit_and_cross(){
