@@ -193,7 +193,7 @@ public class AkariButton extends JButton implements MouseListener {
     /**
      * Method to reload all the Lights.
      */
-    private void reloadLight() {
+    public void reloadLight() {
         for(int i = 0; i< akari.sx; i++){
             for(int j = 0; j< akari.sy; j++){
                 if(akari.buttons[i][j].state==State.Bulb||akari.buttons[i][j].state==State.Error){

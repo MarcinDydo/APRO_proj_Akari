@@ -1,6 +1,7 @@
 package akari.maps;
 
 import akari.view.Akari;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.Stack;
 public class Solver {
 
     private Akari akari;
-    private int[][] map;
+    public int[][] map;
     private int x, y;
     private Stack<int[][]> stack;
     private Field[][] fields;
@@ -18,7 +19,7 @@ public class Solver {
         this.stack = new Stack<>();
     }
 
-    Solver(Akari akari){
+    public Solver(Akari akari) {
         this.akari = akari;
         this.map = new int[akari.sx][akari.sy];
         for(int i=0;i<akari.sx;i++){
@@ -26,6 +27,7 @@ public class Solver {
                 if(akari.buttons[i][j].state.getValue()<9 && akari.buttons[i][j].state.getValue()>-1) map[i][j]=akari.buttons[i][j].state.getValue();
             }
         }
+        solve();
     }
 
 

@@ -1,9 +1,6 @@
 package akari.view;
 
-import akari.maps.Checker;
-import akari.maps.Generator;
-import akari.maps.Loader;
-import akari.maps.Saver;
+import akari.maps.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -144,6 +141,14 @@ class AkariMenuBar extends JMenuBar {
                 akari.swap(akari.solution);
             }
         });
+        JMenuItem Solve2 = new JMenuItem(new AbstractAction("Solve (Experimental)") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Solver s = new Solver(akari);
+                akari.swap(s.map);
+                akari.buttons[0][0].reloadLight();
+            }
+        });
         difficulty.add(veryEasy);
         difficulty.add(Easy);
         difficulty.add(Medium);
@@ -151,6 +156,7 @@ class AkariMenuBar extends JMenuBar {
         difficulty.add(veryHard);
         file.add(generate);
         game.add(Solve);
+        game.add(Solve2);
         game.add(check);
         game.add(Help);
 
