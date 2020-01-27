@@ -39,7 +39,10 @@ public class Akari extends JFrame {
             }
         }
         add(p);
-        this.setJMenuBar(new AkariMenuBar(this));
+        AkariMenuBar a = new AkariMenuBar(this);
+        this.setJMenuBar(a);
+        Score score = new Score();
+        a.add(score);
         setVisible(true);
 
     }
@@ -67,6 +70,10 @@ public class Akari extends JFrame {
         }
         repaint();
         add(p);
+        AkariMenuBar a = new AkariMenuBar(this);
+        this.setJMenuBar(a);
+        Score score = new Score();
+        a.add(score);
         setVisible(true);
     }
 
@@ -95,6 +102,10 @@ public class Akari extends JFrame {
         }
         repaint();
         add(p);
+        AkariMenuBar a = new AkariMenuBar(this);
+        this.setJMenuBar(a);
+        Score score = new Score();
+        a.add(score);
         setVisible(true);
     }
 }
