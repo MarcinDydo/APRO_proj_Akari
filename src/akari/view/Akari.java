@@ -76,6 +76,7 @@ public class Akari extends JFrame {
         score = new Score();
         score.score = 0;
         a.add(score);
+        buttons[0][0].reloadLight();
         setVisible(true);
     }
 
