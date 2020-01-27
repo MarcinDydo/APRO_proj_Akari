@@ -9,6 +9,7 @@ import java.awt.*;
  * Class to represent Akari game.
 */
 public class Akari extends JFrame {
+    public Score score;
     public int[][] solution;
     public int sx;
     public int sy;
@@ -41,7 +42,7 @@ public class Akari extends JFrame {
         add(p);
         AkariMenuBar a = new AkariMenuBar(this);
         this.setJMenuBar(a);
-        Score score = new Score();
+        score = new Score();
         a.add(score);
         setVisible(true);
 
@@ -72,7 +73,8 @@ public class Akari extends JFrame {
         add(p);
         AkariMenuBar a = new AkariMenuBar(this);
         this.setJMenuBar(a);
-        Score score = new Score();
+        score = new Score();
+        score.score = 0;
         a.add(score);
         setVisible(true);
     }
@@ -104,7 +106,7 @@ public class Akari extends JFrame {
         add(p);
         AkariMenuBar a = new AkariMenuBar(this);
         this.setJMenuBar(a);
-        Score score = new Score();
+        score = new Score();
         a.add(score);
         setVisible(true);
     }

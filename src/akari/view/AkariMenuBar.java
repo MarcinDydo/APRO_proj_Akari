@@ -53,7 +53,7 @@ class AkariMenuBar extends JMenuBar {
                             "Save Game",
                             "Return to game"};
                     int n = JOptionPane.showOptionDialog(akari,
-                            "You won! What would you like to do next?",
+                            "You won! You have " + akari.score.score + " points! Congratulations. What would you like to do next?",
                             "Game Won",
                             JOptionPane.YES_NO_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE,

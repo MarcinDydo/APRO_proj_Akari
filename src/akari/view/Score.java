@@ -22,9 +22,13 @@ public class Score extends JMenuItem implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        score--;
         //System.out.println(e.getSource());
-        timeLabel.setText("" + score + "pkt.");
+        if (score == 0) {
+            timeLabel.setText("" + 0 + "pkt.");
+        } else {
+            timeLabel.setText("" + score + "pkt.");
+            score--;
+        }
     }
 
     public void reset() {
