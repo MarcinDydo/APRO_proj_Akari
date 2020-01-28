@@ -27,7 +27,7 @@ public class Akari extends JFrame {
         this.sy=difficulty.getSize();
         buttons=new AkariButton[sx][sy];
         Generator generator = new Generator(sx,sy);
-        int[][] map = generator.getMAP(4);
+        int[][] map = generator.getMAP(15);
         solution = generator.solution;
         setSize(40*sx,40*sy+40);
         setResizable(false);

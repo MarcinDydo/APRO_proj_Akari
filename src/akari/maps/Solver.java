@@ -2,9 +2,6 @@ package akari.maps;
 
 import akari.view.Akari;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Stack;
 
 public class Solver {
@@ -15,10 +12,16 @@ public class Solver {
     private Stack<int[][]> stack;
     private Field[][] fields;
 
+    /**
+     * Initialing the stack.
+     */
     public Solver() {
         this.stack = new Stack<>();
     }
 
+    /**
+     * @param akari Class akari, from there we get map
+     */
     public Solver(Akari akari) {
         this.stack = new Stack<>();
         this.akari = akari;
@@ -33,18 +36,23 @@ public class Solver {
         solve();
     }
 
-
+    /**
+     * All the methods that are used to solve the puzzle
+     */
     private void solve() {
         set_up_map_of_objects();
         set_coross_next_to_0();
         set_bulbs_next_to_4();
         set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0);
         set_cross_if_black_block_value_equals_number_of_bulbs();
-        place_all_first_poossible_bulbs_on_stack();
+        place_all_first_possible_bulbs_on_stack();
         back_tracking();
         removing_lit_and_cross();
     }
 
+    /**
+     * Method that remove all lit field and cross form the map
+     */
     private void removing_lit_and_cross(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++) {
@@ -56,7 +64,7 @@ public class Solver {
     /**
      * Method place on stack all possible first moves in order to let work a backtracking method
      */
-    private void place_all_first_poossible_bulbs_on_stack(){
+    private void place_all_first_possible_bulbs_on_stack(){
         for(int i = 0; i < x; i++){
             for(int k = 0; k < y; k++){
                 if(map[i][k]==0){
@@ -68,6 +76,9 @@ public class Solver {
         }
     }
 
+    /**
+     * Backtracking algorithm.
+     */
     private void back_tracking(){
         while (!stack.empty()){
             map = stack.pop();
@@ -76,7 +87,9 @@ public class Solver {
                     if (map[i][k] == 0) {
                         if (check_the_bounds(i, k) && no_collision(i, k) && if_value_of_fields_equals_quantity_of_bulbs_next_to_it(i, k)) {
                             int[][] temp = rewriting_map();
-                            Expansion.expand(temp,7,i,k);
+                            Expansion.expand(temp,7,i,k); //Expand the light of the bulb
+                            set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0); //check as in description of the method
+                            set_cross_if_black_block_value_equals_number_of_bulbs(); //set cross as in description of the method
                             stack.push(temp);
                         }
                     }
@@ -100,13 +113,13 @@ public class Solver {
                     int[] colNbr = new int[]{0, 1, 0, -1};
                     for (int j = 0; j < 4; j++) {
                         if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 8) {
-                            counter++;
+                            counter++; //count number of bulbs that are next to int field with parameters i and k
                         }
                     }
                     for (int j = 0; j < 4; j++) {
                         if (counter == map[i][k]) {
                             if (check_the_bounds(i + rowNbr[j], k + colNbr[j]) && map[i + rowNbr[j]][k + colNbr[j]] == 0)
-                                map[i + rowNbr[j]][k + colNbr[j]] = 9;
+                                map[i + rowNbr[j]][k + colNbr[j]] = 9; //if there is equals number of bulbs and value of the field method set rest neighbour of tge field as a cross
                         }
                     }
                 }
@@ -156,6 +169,7 @@ public class Solver {
      * recursion taht set bulbs if the number of dark space equals a quantity od value of the black field
      */
     private void set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(int i, int k) {
+        //check the requirement for the recursion
         if (!(map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) || fields[i][k].isVisited()) {
             if (k + 1 == y) {
                 if (i + 1 != x) set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i + 1, 0);
@@ -180,7 +194,7 @@ public class Solver {
                 }
                 set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(0, 0);
             }
-            //recursion
+            //check the requirement for the recursion
             if (k + 1 == y) {
                 if (i + 1 != x) set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i + 1, 0);
             } else set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(i, k + 1);
@@ -189,7 +203,7 @@ public class Solver {
     }
 
     /**
-     * method that set bulbs next to parameterized black field with 4 number
+     * Method that set bulbs next to black field with 4 number
      */
     private void set_bulbs_next_to_4() {
         for (int i = 0; i < x; i++) {
@@ -221,18 +235,14 @@ public class Solver {
     }
 
     /**
-     * find the white field and set the tempX and tempY for that field
-     */
-
-    /**
      * check if the map is solved
-     * @return
+     * @return return true if all the statements are true, false in other case
      */
     private boolean is_solved(int[][] map){
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
-                if(map[i][k]==0 || map[i][k]==9) return false;
-                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) {
+                if(map[i][k]==0 || map[i][k]==9) return false; //check if on the map there is 0 or 9 (Dark or Cross)
+                if (map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3) { //check if all black fields have equals number of bulbs next to
                     int counter = 0;
                     int[] rowNbr = new int[]{-1, 0, 1, 0};
                     int[] colNbr = new int[]{0, 1, 0, -1};
@@ -251,14 +261,17 @@ public class Solver {
     /**
      * Method check if it is possible to set bulb in field with cords i,k. If on the expansion of the bulb appear bulb
      * return false, or if on the expansion of the light appear black block, method check others requirement
+     * Method check:
+     * - if on the path there is a black block it it legal to set there bulb
+     * - if on the path there is a bulb it it illegal to set there bulb
      * @param i x cordintate
      * @param k y cordinate
      * @return return true if there is no colision and we can place there a bulb
      */
     private boolean no_collision(int i, int k) {
         for (int j = 1; j < y - k; j++) {
-            if (check_the_bounds(i, k + j) && is_black_block(i, k + j)) break;
-            if (check_the_bounds(i, k + j) && map[i][k + j] == 8) return false;
+            if (check_the_bounds(i, k + j) && is_black_block(i, k + j)) break; //if on the path there is a black block it it legal to set there bulb
+            if (check_the_bounds(i, k + j) && map[i][k + j] == 8) return false; //if on the path there is a bulb it it illegal to set there bulb
         }
         for (int j = 1; j < y - k; j++) {
             if (check_the_bounds(i, k - j) && is_black_block(i, k - j)) break;
@@ -293,7 +306,7 @@ public class Solver {
      * @param k y cordinate
      * @return true if the block is black and false other case
      */
-    private boolean is_black_block(int i, int k) {
+    boolean is_black_block(int i, int k) {
         return map[i][k] == 1 || map[i][k] == 2 || map[i][k] == 3 || map[i][k] == 4 || map[i][k] == 5 || map[i][k] == 6;
     }
 
@@ -303,25 +316,7 @@ public class Solver {
      * @param k y cordinate
      * @return return true if i and k isn`t out of band
      */
-    private boolean check_the_bounds(int i, int k) {
+    boolean check_the_bounds(int i, int k) {
         return i >= 0 && i < x && k >= 0 && k < y;
-    }
-
-    private void read(String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        String line = br.readLine();
-        String separator = ";";
-        x = Integer.parseInt(line.split(separator)[0]);
-        y = Integer.parseInt(line.split(separator)[1]);
-        int j = 0;
-        int[][] map = new int[x][y];
-        while ((line = br.readLine()) != null) {
-            for (int i = 0; i < line.split(separator).length; i++) {
-                map[j][i] = Integer.parseInt(line.split(separator)[i]);
-            }
-            j++;
-        }
-        br.close();
-        this.map = map;
     }
 }

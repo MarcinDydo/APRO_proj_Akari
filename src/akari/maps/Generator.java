@@ -57,7 +57,59 @@ public class Generator {
                 if(MAP[i][j]==7 || MAP[i][j]==8) MAP[i][j] = 0; //wipes out Bulb and Lit tiles
             }
         }
+
+
+        //dodane przez dadurke
+        {
+            //metoda ktora nie pozwala aby zero bylo otoczone czarnymi blokami
+            for (int i = 0; i < MAP.length; i++) {
+                for (int k = 0; k < MAP[0].length; k++) {
+                    if (MAP[i][k] == 5) {
+                        if (countNeighbour(i, k) == 4) MAP[i][k] = 0;
+                    }
+                }
+            }
+
+            //metoda ktora spr czy na bokach nie ma takich 0, że jest ooczone
+            for (int i = 0; i < MAP.length; i++) {
+                if (MAP[i][0] == 0) {
+                    if (countNeighbour(i, 0) == 3) MAP[i][0] = 6;
+                }
+                if (MAP[i][MAP[0].length - 1] == 3) {
+                    if (countNeighbour(i, MAP[0].length - 1) == 3) MAP[i][MAP[0].length - 1] = 6;
+                }
+            }
+
+            for (int i = 0; i < MAP[0].length; i++) {
+                if (MAP[0][i] == 3) {
+                    if (countNeighbour(0, i) == 3) MAP[0][i] = 6;
+                }
+                if (MAP[MAP.length - 1][i] == 3) {
+                    if (countNeighbour(MAP.length - 1, i) == 3) MAP[MAP.length - 1][i] = 6;
+                }
+            }
+        }
     }
+
+    /**
+     * Method count how many black block is next to 0 field.
+     * @param i x parameter
+     * @param k y parameter
+     * @return return number of black neighbour
+     */
+    private int countNeighbour(int i, int k){
+        Solver s = new Solver();
+        int counter = 0;
+        int[] rowNbr = new int[]{-1, 0, 1, 0};
+        int[] colNbr = new int[]{0, 1, 0, -1};
+        for (int j = 0; j < 4; j++) {
+            if (s.check_the_bounds(i + rowNbr[j], k + colNbr[j]) && s.is_black_block(i + rowNbr[j],k + colNbr[j])) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     /**
      * assigns random values depending on ratios
      * @return Dark or Black
@@ -111,7 +163,7 @@ public class Generator {
         try{
             if(MAP[i][j+1] == tile) counter++;
         }catch (IndexOutOfBoundsException ignored){}
-        if(rand.nextInt(2)>0){
+        if(rand.nextInt(4)>0){
             if(counter>0)return counter;
             else return 5;
         }else return 6;
