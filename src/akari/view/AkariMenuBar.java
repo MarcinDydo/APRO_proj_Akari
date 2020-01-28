@@ -141,7 +141,7 @@ class AkariMenuBar extends JMenuBar {
                 akari.swap(akari.solution);
             }
         });
-        JMenuItem Solve2 = new JMenuItem(new AbstractAction("Solve (Experimental)") {
+        JMenuItem Solve2 = new JMenuItem(new AbstractAction("Solve External") {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 Solver s = new Solver(akari);
