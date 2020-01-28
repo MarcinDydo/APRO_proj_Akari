@@ -61,7 +61,7 @@ public class Generator {
 
         //dodane przez dadurke
         {
-            //metoda ktora nie pozwala aby zero bylo otoczone czarnymi blokami
+            //Method that check wether on the map there is a field 0 that have only black neighbours, if yes make that field 6
             for (int i = 0; i < MAP.length; i++) {
                 for (int k = 0; k < MAP[0].length; k++) {
                     if (MAP[i][k] == 5) {
@@ -70,7 +70,7 @@ public class Generator {
                 }
             }
 
-            //metoda ktora spr czy na bokach nie ma takich 0, że jest ooczone
+            //Method that check wether on the borders of map there is a field 0 that have only black neighbours, if yes make that field 6
             for (int i = 0; i < MAP.length; i++) {
                 if (MAP[i][0] == 0) {
                     if (countNeighbour(i, 0) == 3) MAP[i][0] = 6;

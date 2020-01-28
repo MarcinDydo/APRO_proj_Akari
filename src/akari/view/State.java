@@ -1,5 +1,19 @@
 package akari.view;
 
+/*
+    0-Dark
+    1- Black_1
+    2- Black_2
+    3- Black_3
+    4- Black_4
+    5- Black_0
+    6- Black
+    7- Lit
+    8- Bulb
+    9-Dark_Cross
+    10-Dark_Lit
+*/
+
 import javax.swing.*;
 /**
  * Enum class to represent states of akari.view.Akari tile
@@ -87,17 +101,4 @@ public enum State {
                 return LitCross;
         }
     }
-       /*
-    0-Dark
-    1- Black_1
-    2- Black_2
-    3- Black_3
-    4- Black_4
-    5- Black_0
-    6- Black
-    7- Lit
-    8- Bulb
-    9-Dark_Cross
-    10-Dark_Lit
-     */
 }

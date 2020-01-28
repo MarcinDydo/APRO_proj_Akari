@@ -166,7 +166,7 @@ public class Solver {
     }
 
     /**
-     * recursion taht set bulbs if the number of dark space equals a quantity od value of the black field
+     * Recursive method that set bulbs if the number of dark space equals a quantity od value of the black field
      */
     private void set_bulbs_next_to_black_field_if_value_equals_quantity_of_white_space(int i, int k) {
         //check the requirement for the recursion
@@ -187,6 +187,7 @@ public class Solver {
                 }
             }
             if (counter == map[i][k]) {
+                //setting that the field was visited is required to prevent a infinity loop
                 fields[i][k].setVisited(true);
                 while (!stack.empty()) {
                     Field field = stack.pop();
@@ -219,7 +220,7 @@ public class Solver {
     }
 
     /**
-     * method that set cross next to 0 fields in order to forbid place bulb there
+     * Method that set cross next to 0 fields in order to forbid place bulb there
      */
     private void set_coross_next_to_0() {
         for (int i = 0; i < x; i++) {

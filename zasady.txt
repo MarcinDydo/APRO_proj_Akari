@@ -9,5 +9,3 @@
     8- bulb
     9- cross
     10 - lit cross
-
-
