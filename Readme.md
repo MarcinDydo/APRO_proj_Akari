@@ -38,3 +38,5 @@ Dydo - akari.maps.Generator
 Dadura - akari.Solver
 
 Przekazujemy tablice intów na koncu
+
+Farjancik !!!
