@@ -60,12 +60,12 @@ public class AkariButton extends JButton implements MouseListener {
                         expand(this, State.Lit );
                         reloadLight();
                         if (new Checker(akari).check()) {
-                            Object[] options = {"New akari.Game",
-                                    "Save akari.Game",
+                            Object[] options = {"New Game",
+                                    "Save Game",
                                     "Return to game"};
                             int n = JOptionPane.showOptionDialog(akari,
-                                    "You won! What would you like to do next?",
-                                    "akari.Game Won",
+                                    "You won! You have " + akari.score.score + " points! Congratulations. What would you like to do next?\"",
+                                    "Game Won",
                                     JOptionPane.YES_NO_CANCEL_OPTION,
                                     JOptionPane.QUESTION_MESSAGE,
                                     null,
